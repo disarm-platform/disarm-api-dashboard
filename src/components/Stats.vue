@@ -1,5 +1,5 @@
 <template>
-  <div v-if='show'>
+  <div v-if='show' data-tooltip="invocations / replicas">
     <span>{{row.deployed_invocation_count}}</span> / 
     <span>{{row.available_replicas}}</span>
   </div>

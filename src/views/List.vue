@@ -6,30 +6,34 @@
         <thead>
           <tr>
             <th>Name</th>
-            <th>Repo</th>
-            <th>Actions</th>
             <th>State</th>
-            <th>Stats (i / r)</th>
+            <th>Scale to zero</th>
+            <th>Stats</th>
+            <th>Actions</th>
             <th>Notes</th>
+            <th>Repo</th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="row in api_data" :key="row.function_name">
             <td>{{row.function_name}}</td>
             <td>
-              <a v-if='row.repo' :href="row.repo" target="_blank">Link</a>
-            </td>
-            <td>
-              <Actions :row="row" />
-            </td>
-            <td>
               <State :row="row" />
+            </td>
+            <td>
+              <span v-if='row.scale_to_zero'>✔️</span>
             </td>
             <td>
               <Stats :row="row" />
             </td>
             <td>
+              <Actions :row="row" />
+            </td>
+            <td>
               <Notes :row="row" />
+            </td>
+            <td>
+              <a v-if="row.repo" :href="row.repo" target="_blank">Link</a>
             </td>
           </tr>
         </tbody>

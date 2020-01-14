@@ -1,8 +1,8 @@
 <template>
   <div>
-    <button :disabled='c.deployed' @click='deploy'>deploy</button>
-    <button :disabled='!c.deployed' @click='redeploy'>redeploy</button>
-    <button :disabled='!c.upgradable' @click='upgrade'>upgrade</button>
+    <button :disabled='!row.target_image_version' @click='deploy'>deploy</button>
+    <button :disabled='!(c.deployed && row.hide_from_deploy)' @click='remove'>remove</button>
+    <button :disabled='!(c.deployed && c.upgradable)' @click='upgrade'>upgrade</button>
     <button :disabled='!c.testable' @click='test'>test</button>
     <button :disabled='!c.deployed' @click='logs'>logs</button>
   </div>
@@ -26,8 +26,8 @@ export default Vue.extend({
     deploy() {
       console.log('do: deploy', this.row.function_name);
     },
-    redeploy() {
-      console.log('do: redeploy', this.row.function_name);
+    remove() {
+      console.log('do: remove', this.row.function_name);
     },
     upgrade() {
       console.log('do: upgrade', this.row.function_name);
@@ -43,4 +43,7 @@ export default Vue.extend({
 </script>
 
 <style>
+button {
+  font-size: 0.8em;
+}
 </style>
