@@ -1,7 +1,8 @@
 <template>
-  <div v-if='show' data-tooltip="invocations / replicas">
-    <span>{{row.deployed_invocation_count}}</span> / 
-    <span>{{row.available_replicas}}</span>
+  <div v-if='show' data-tooltip="invocations / replicas / scale-to-zero" class='subtle'>
+    <span :class='{highlight: row.deployed_invocation_count !== 0}'>{{row.deployed_invocation_count}}</span> / 
+    <span :class='{highlight: row.available_replicas !== 0}'>{{row.available_replicas}}</span> / 
+    <span :class='{highlight: row.scale_to_zero}'>{{row.scale_to_zero ? 'Y' : 'N'}}</span>
   </div>
 </template>
 
@@ -28,10 +29,10 @@ export default Vue.extend({
 </script>
 
 <style scoped>
-span {
-  color: grey;
+.subtle {
+  color: lightgrey;
 }
-span.active {
-  color: #92d033;
+.highlight {
+  color: #2c74d9;
 }
 </style>
