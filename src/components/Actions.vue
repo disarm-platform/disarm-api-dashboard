@@ -3,15 +3,11 @@
     <button
       v-if="c.deployed && c.upgradable"
       style="min-width: 56px;"
-      class='warning'
+      class="warning"
       :disabled="!(c.deployed && c.upgradable)"
       @click="upgrade"
     >upgrade</button>
-    <button
-      style="min-width: 56px;"
-      class="success"
-      v-else-if='!c.deployed'
-    >deploy</button>
+    <button style="min-width: 56px;" class="success" v-else-if="!c.deployed">deploy</button>
     <button
       v-else
       style="min-width: 56px;"
@@ -19,7 +15,11 @@
       @click="deploy"
     >redeploy</button>
 
-    <button :disabled="!(c.deployed && row.hide_from_deploy)" @click="remove">remove</button>
+    <button
+      :disabled="!(c.deployed && row.hide_from_deploy)"
+      class="warning"
+      @click="undeploy"
+    >undeploy</button>
     <button :disabled="!c.testable" @click="test">test</button>
     <button :disabled="!c.deployed" @click="logs">logs</button>
   </div>
@@ -43,8 +43,8 @@ export default Vue.extend({
     deploy() {
       console.log('do: deploy', this.row.function_name);
     },
-    remove() {
-      console.log('do: remove', this.row.function_name);
+    undeploy() {
+      console.log('do: undeploy', this.row.function_name);
     },
     upgrade() {
       console.log('do: upgrade', this.row.function_name);

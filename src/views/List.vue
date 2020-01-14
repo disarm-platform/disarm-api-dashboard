@@ -15,7 +15,12 @@
         <tbody>
           <tr v-for="row in api_data" :key="row.function_name">
             <td>
-              <a v-if="row.repo" :href="row.repo" target="_blank" data-tooltip="repo link">{{row.function_name}}</a>
+              <a
+                v-if="row.repo"
+                :href="row.repo"
+                target="_blank"
+                v-bind:data-tooltip='row.repo'
+              >{{row.function_name}}</a>
               <span v-else>{{row.function_name}}</span>
             </td>
             <td>
