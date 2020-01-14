@@ -52,6 +52,8 @@ import State from '@/components/State.vue';
 import Stats from '@/components/Stats.vue';
 import Notes from '@/components/Notes.vue';
 
+import CONFIG from '@/config';
+
 export default Vue.extend({
   components: { Actions, State, Stats, Notes },
   data() {
@@ -60,8 +62,7 @@ export default Vue.extend({
     };
   },
   async mounted() {
-    const url = 'https://europe-west1-disarm-platform.cloudfunctions.net/disarm-api-dashboard-api';
-    // const url = 'http://localhost:5000/api.json';
+    const url = process.env.VUE_APP_API_URL || CONFIG.api_url;
     const data = await fetch(url);
     const json = await data.json();
     console.table(json);

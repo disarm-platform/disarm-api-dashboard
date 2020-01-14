@@ -10,6 +10,12 @@ npm install
 npm run serve
 ```
 
+Optionally prefix to set API_URL
+
+```
+VUE_APP_API_URL=http://localhost:5000/api.json npm run serve
+```
+
 ### Compiles and minifies for production
 ```
 npm run build
