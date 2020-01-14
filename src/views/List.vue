@@ -60,8 +60,8 @@ export default Vue.extend({
     };
   },
   async mounted() {
-    // const url = 'https://europe-west1-disarm-platform.cloudfunctions.net/disarm-api-dashboard-api';
-    const url = 'http://localhost:5000/api.json';
+    const url = 'https://europe-west1-disarm-platform.cloudfunctions.net/disarm-api-dashboard-api';
+    // const url = 'http://localhost:5000/api.json';
     const data = await fetch(url);
     const json = await data.json();
     console.table(json);
