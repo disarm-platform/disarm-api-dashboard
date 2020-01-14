@@ -1,12 +1,12 @@
-import { shallowMount } from '@vue/test-utils'
-import HelloWorld from '@/components/HelloWorld.vue'
+import List from '@/views/List.vue';
+import { shallowMount } from '@vue/test-utils';
 
-describe('HelloWorld.vue', () => {
+describe('List.vue', () => {
   it('renders props.msg when passed', () => {
-    const msg = 'new message'
-    const wrapper = shallowMount(HelloWorld, {
-      propsData: { msg }
-    })
-    expect(wrapper.text()).toMatch(msg)
-  })
-})
+    const msg = 'new message';
+    const wrapper = shallowMount(List, {
+      propsData: { msg },
+    });
+    expect(wrapper.text()).toMatch(msg);
+  });
+});
