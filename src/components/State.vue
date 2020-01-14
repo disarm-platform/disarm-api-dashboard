@@ -1,5 +1,5 @@
 <template>
-  <div data-tooltip="Deployed | Running | Sleeping">
+  <div v-bind:data-tooltip="tooltip">
     <span class='state' :class="{green: c.deployed, red: !c.deployed}" disabled>D</span>
     <span class='state' :class="{orange: c.running}">R</span>
     <span class='state' :class="{blue: c.sleeping}">S</span>
@@ -19,6 +19,12 @@ export default Vue.extend({
     c(): any {
       return this.row.computed;
     },
+    tooltip(): string {
+      return `${this.c.deployed ? 'deployed' : 'not deployed'} |
+      ${this.c.running ? 'running' : 'not running'} | 
+      ${this.c.sleeping ? 'sleeping' : 'not sleeping'}
+      `;
+    },
   },
 });
 </script>
@@ -26,8 +32,8 @@ export default Vue.extend({
 <style scoped>
 .state {
   padding: 5px;
-  background-color: gainsboro;
-  color: grey;
+    background-color: gainsboro;
+    color: #ececec;
 }
 .red {
   background-color: #ffb0b0;

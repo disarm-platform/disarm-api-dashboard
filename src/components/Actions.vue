@@ -1,10 +1,27 @@
 <template>
   <div>
-    <button :disabled='!row.target_image_version' @click='deploy'>deploy</button>
-    <button :disabled='!(c.deployed && row.hide_from_deploy)' @click='remove'>remove</button>
-    <button :disabled='!(c.deployed && c.upgradable)' @click='upgrade'>upgrade</button>
-    <button :disabled='!c.testable' @click='test'>test</button>
-    <button :disabled='!c.deployed' @click='logs'>logs</button>
+    <button
+      v-if="c.deployed && c.upgradable"
+      style="min-width: 56px;"
+      class='warning'
+      :disabled="!(c.deployed && c.upgradable)"
+      @click="upgrade"
+    >upgrade</button>
+    <button
+      style="min-width: 56px;"
+      class="success"
+      v-else-if='!c.deployed'
+    >deploy</button>
+    <button
+      v-else
+      style="min-width: 56px;"
+      :disabled="!row.target_image_version"
+      @click="deploy"
+    >redeploy</button>
+
+    <button :disabled="!(c.deployed && row.hide_from_deploy)" @click="remove">remove</button>
+    <button :disabled="!c.testable" @click="test">test</button>
+    <button :disabled="!c.deployed" @click="logs">logs</button>
   </div>
 </template>
 
