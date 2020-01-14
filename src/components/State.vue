@@ -44,7 +44,8 @@ export default Vue.extend({
   color: white;
 }
 .orange {
-  background-color: orange;
+  background-color: #f7daa6;
+  color: white;
 }
 .blue {
   background-color: #abc5fff2;
