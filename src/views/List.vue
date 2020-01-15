@@ -7,8 +7,9 @@
           <tr>
             <th>Name</th>
             <th>State</th>
-            <th>Stats</th>
+            <th>Runs</th>
             <th>Actions</th>
+            <th>Config</th>
             <th>Notes</th>
           </tr>
         </thead>
@@ -19,8 +20,12 @@
                 v-if="row.repo"
                 :href="row.repo"
                 target="_blank"
-                v-bind:data-tooltip='row.repo'
+                v-bind:data-tooltip="row.repo"
               >{{row.function_name}}</a>
+              <a
+                v-if="row.computed.deployed"
+                :href="`https://faas.srv.disarm.io/functions/${row.function_name}`"
+              >(run URL)</a>
               <span v-else>{{row.function_name}}</span>
             </td>
             <td>
@@ -31,6 +36,9 @@
             </td>
             <td>
               <Actions :row="row" />
+            </td>
+            <td>
+              <span v-if='row.scale_to_zero'>scale to zero</span>
             </td>
             <td>
               <Notes :row="row" />

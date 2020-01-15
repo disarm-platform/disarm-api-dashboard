@@ -1,10 +1,8 @@
 <template>
-  <div v-if="show" v-bind:data-tooltip='tooltip' class="subtle">
+  <div v-if="show" class="subtle">
     <span
       :class="{highlight: row.deployed_invocation_count !== 0}"
-    >{{row.deployed_invocation_count}}</span> /
-    <span :class="{highlight: row.available_replicas !== 0}">{{row.available_replicas}}</span> /
-    <span :class="{highlight: row.scale_to_zero}">{{row.scale_to_zero ? 'Y' : 'N'}}</span>
+    >{{row.deployed_invocation_count}}</span> 
   </div>
 </template>
 
@@ -26,12 +24,7 @@ export default Vue.extend({
     show(): boolean {
       return !isNull(this.row.deployed_invocation_count) && !isNull(this.row.available_replicas);
     },
-    tooltip(): string {
-      return `${this.row.deployed_invocation_count} invocations /
-      ${this.row.available_replicas} available replicas /
-      ${this.row.scale_to_zero ? 'scale to zero' : 'no scale to zero'}
-      `;
-    },
+
   },
 });
 </script>

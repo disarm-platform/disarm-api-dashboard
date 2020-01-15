@@ -2,13 +2,15 @@
   <div v-bind:data-tooltip="tooltip">
     <span class="state" :class="{green: c.deployed, red: !c.deployed}" disabled>D</span>
     <span class="state" :class="{orange: c.running}">R</span>
-    <span class="state" :class="{blue: c.sleeping}">S</span>
   </div>
 </template>
 
 <script lang='ts'>
 import Vue from 'vue';
-import { CombinedRecord } from '../types';
+import {isNull} from 'lodash';
+
+import { CombinedRecord } from '@/types';
+
 export default Vue.extend({
   props: {
     row: {
@@ -20,9 +22,10 @@ export default Vue.extend({
       return this.row.computed;
     },
     tooltip(): string {
-      return `${this.c.deployed ? 'deployed' : 'not deployed'} |
-      ${this.c.running ? 'running' : 'not running'} |
-      ${this.c.sleeping ? 'sleeping' : 'not sleeping'}
+      return `${this.c.deployed ? 'deployed' : 'not deployed'}
+      ${isNull(this.row.available_replicas) ? '' : '(' + this.row.available_replicas + ' replicas)'}
+      |
+      ${this.c.running ? 'running' : 'not running'}
       `;
     },
   },

@@ -1,27 +1,22 @@
 <template>
   <div>
     <button
-      v-if="c.deployed && c.upgradable"
-      style="min-width: 56px;"
-      class="warning"
-      :disabled="!(c.deployed && c.upgradable)"
-      @click="upgrade"
-    >upgrade</button>
-    <button style="min-width: 56px;" class="success" v-else-if="!c.deployed">deploy</button>
-    <button
-      v-else
-      style="min-width: 56px;"
       :disabled="!row.target_image_version"
+      class="success"
       @click="deploy"
-    >redeploy</button>
+    >deploy</button>
 
     <button
       :disabled="!(c.deployed && row.hide_from_deploy)"
       class="warning"
       @click="undeploy"
+      data-tooltip="Only if 'hide_from_deploy' is checked in Airtable"
     >undeploy</button>
+
     <button :disabled="!c.testable" @click="test">test</button>
+    
     <button :disabled="!c.deployed" @click="logs">logs</button>
+
   </div>
 </template>
 
@@ -45,9 +40,6 @@ export default Vue.extend({
     },
     undeploy() {
       console.log('do: undeploy', this.row.function_name);
-    },
-    upgrade() {
-      console.log('do: upgrade', this.row.function_name);
     },
     test() {
       console.log('do: test', this.row.function_name);
