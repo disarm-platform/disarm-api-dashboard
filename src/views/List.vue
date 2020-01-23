@@ -6,6 +6,7 @@
         <thead>
           <tr>
             <th>Name</th>
+            <th>Links</th>
             <th>State</th>
             <th>Runs</th>
             <th>Actions</th>
@@ -15,18 +16,21 @@
         </thead>
         <tbody>
           <tr v-for="row in api_data" :key="row.function_name">
+            <td>{{row.function_name}}</td>
             <td>
               <a
                 v-if="row.repo"
                 :href="row.repo"
                 target="_blank"
                 v-bind:data-tooltip="row.repo"
-              >{{row.function_name}}</a>
+              >repo</a>
+              <span v-else class="disabled">repo</span>
+              |
               <a
                 v-if="row.computed.deployed"
                 :href="`https://faas.srv.disarm.io/functions/${row.function_name}`"
-              >(run URL)</a>
-              <span v-else>{{row.function_name}}</span>
+              >fn</a>
+              <span v-else class="disabled">fn</span>
             </td>
             <td>
               <State :row="row" />
@@ -38,7 +42,7 @@
               <Actions :row="row" />
             </td>
             <td>
-              <span v-if='row.scale_to_zero'>scale to zero</span>
+              <span v-if="row.scale_to_zero">scale to zero</span>
             </td>
             <td>
               <Notes :row="row" />
@@ -78,3 +82,9 @@ export default Vue.extend({
   },
 });
 </script>
+
+<style scoped>
+.disabled {
+  color: grey;
+}
+</style>
