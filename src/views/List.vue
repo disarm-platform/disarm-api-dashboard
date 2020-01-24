@@ -29,8 +29,14 @@
               <a
                 v-if="row.computed.deployed"
                 :href="`https://faas.srv.disarm.io/functions/${row.function_name}`"
+                target="_blank"
               >fn</a>
               <span v-else class="disabled">fn</span>
+              |
+              <a
+                :href="logs_url(row.function_name)"
+                target="_blank"
+              >logs</a>
             </td>
             <td>
               <State :row="row" />
@@ -63,6 +69,7 @@ import Actions from '@/components/Actions.vue';
 import State from '@/components/State.vue';
 import Stats from '@/components/Stats.vue';
 import Notes from '@/components/Notes.vue';
+import {logs_url} from '@/logs_url';
 
 import CONFIG from '@/config';
 
@@ -77,8 +84,14 @@ export default Vue.extend({
     const url = process.env.VUE_APP_API_URL || CONFIG.api_url;
     const data = await fetch(url);
     const json = await data.json();
-    console.table(json);
     this.api_data = json;
+  },
+  methods: {
+    logs_url(function_name: string): string {
+      const href = logs_url(function_name);
+      console.log('href', href);
+      return href;
+    },
   },
 });
 </script>

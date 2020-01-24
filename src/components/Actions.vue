@@ -15,9 +15,7 @@
 
     <button :disabled="!c.testable" @click="test">test</button>
     
-    <button :disabled="!c.deployed" @click="logs">logs</button>
-
-  </div>
+    </div>
 </template>
 
 <script lang='ts'>
