@@ -22,7 +22,7 @@ export default Vue.extend({
       return this.row.computed;
     },
     show(): boolean {
-      return !isNull(this.row.deployed_invocation_count) && !isNull(this.row.available_replicas);
+      return !isNull(this.row.deployed_invocation_count) && !isNull(this.row.replicas);
     },
 
   },

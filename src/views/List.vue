@@ -89,7 +89,6 @@ export default Vue.extend({
   methods: {
     logs_url(function_name: string): string {
       const href = logs_url(function_name);
-      console.log('href', href);
       return href;
     },
   },

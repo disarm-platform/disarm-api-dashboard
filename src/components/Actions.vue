@@ -10,7 +10,7 @@
       :disabled="!(c.deployed && row.hide_from_deploy)"
       class="warning"
       @click="undeploy"
-      data-tooltip="Only if 'hide_from_deploy' is checked in Airtable"
+      data-tooltip="Requires 'hide_from_deploy' checked in Airtable"
     >undeploy</button>
 
     <button :disabled="!c.testable" @click="test">test</button>

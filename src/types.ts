@@ -30,7 +30,7 @@ export interface BasicRecord {
   // OpenFaas
   deployed_image_version: string | null; // openfaas_record.image
   deployed_invocation_count: number | null; // openfaas_record.invocationCount
-  available_replicas: number | null; // openfaas_record.availableReplicas
+  replicas: number | null; // openfaas_record.replicas
 }
 
 export interface ComputedRecord {

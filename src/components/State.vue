@@ -23,7 +23,7 @@ export default Vue.extend({
     },
     tooltip(): string {
       return `${this.c.deployed ? 'deployed' : 'not deployed'}
-      ${isNull(this.row.available_replicas) ? '' : '(' + this.row.available_replicas + ' replicas)'}
+      ${isNull(this.row.replicas) ? '' : '(' + this.row.replicas + ' replicas)'}
       |
       ${this.c.running ? 'running' : 'not running'}
       `;
