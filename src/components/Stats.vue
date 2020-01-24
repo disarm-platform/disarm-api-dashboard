@@ -1,9 +1,5 @@
 <template>
-  <div v-if="show" class="subtle">
-    <span
-      :class="{highlight: row.deployed_invocation_count !== 0}"
-    >{{row.deployed_invocation_count}}</span> 
-  </div>
+  <span :class="{highlight: row.deployed_invocation_count !== 0}">{{row.deployed_invocation_count}}</span>
 </template>
 
 <script lang='ts'>
@@ -21,10 +17,6 @@ export default Vue.extend({
     c(): any {
       return this.row.computed;
     },
-    show(): boolean {
-      return !isNull(this.row.deployed_invocation_count) && !isNull(this.row.replicas);
-    },
-
   },
 });
 </script>
