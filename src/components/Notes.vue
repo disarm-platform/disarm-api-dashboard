@@ -8,7 +8,7 @@
 
 <script lang='ts'>
 import Vue from 'vue';
-import { CombinedRecord } from '../types';
+import { CombinedRecord, ComputedSection } from '../types';
 export default Vue.extend({
   props: {
     row: {
@@ -16,7 +16,7 @@ export default Vue.extend({
     },
   },
   computed: {
-    c(): any {
+    c(): ComputedSection {
       return this.row.computed;
     },
   },
