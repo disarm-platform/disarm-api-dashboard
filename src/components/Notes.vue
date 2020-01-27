@@ -1,6 +1,6 @@
 <template>
   <div>
-    <span v-if='row.missing_from_airtable' class='alert'>⚠️ Missing from AirTable</span>
+    <span v-if='c.missing_from_airtable' class='alert'>⚠️ Missing from AirTable</span>
     <span v-else-if='!row.target_image_version' class='alert'>⚠️ Missing function image</span>
     <span v-if='c.upgradable'>Function is upgradable via deploy</span> 
   </div>

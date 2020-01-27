@@ -10,7 +10,7 @@
             <th>State</th>
             <th>Runs</th>
             <th>Actions</th>
-            <th>Config</th>
+            <th>env_vars</th>
             <th>Notes</th>
           </tr>
         </thead>
@@ -48,7 +48,7 @@
               <Actions :row="row" />
             </td>
             <td>
-              <span v-if="row.scale_to_zero">scale to zero</span>
+              <span>{{row.env_vars}}</span>
             </td>
             <td>
               <Notes :row="row" />
