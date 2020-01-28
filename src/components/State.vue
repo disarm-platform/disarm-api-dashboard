@@ -9,7 +9,7 @@
 import Vue from 'vue';
 import {isNull} from 'lodash';
 
-import { CombinedRecord } from '@/types';
+import { CombinedRecord, ComputedSection } from '@/types';
 
 export default Vue.extend({
   props: {
@@ -18,7 +18,7 @@ export default Vue.extend({
     },
   },
   computed: {
-    c(): any {
+    c(): ComputedSection {
       return this.row.computed;
     },
     tooltip(): string {
