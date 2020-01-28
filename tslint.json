@@ -5,12 +5,17 @@
     ],
     "jsRules": {},
     "rules": {
-        "no-console": [false],
-        "quotemark": [true, "single"],
+        "no-console": [
+            false
+        ],
+        "quotemark": [
+            true,
+            "single"
+        ],
         "object-literal-sort-keys": false,
         "ordered-imports": false,
         "interface-name": false,
-        "variable-name":false
+        "variable-name": false
     },
     "rulesDirectory": []
 }
