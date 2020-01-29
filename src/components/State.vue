@@ -1,32 +1,29 @@
 <template>
   <div v-bind:data-tooltip="tooltip">
-    <span class="state" :class="{green: c.deployed, red: !c.deployed}" disabled>D</span>
-    <span class="state" :class="{orange: c.running}">R</span>
+    <!-- <span class="state" :class="{green: c.deployed, red: !c.deployed}" disabled>D</span>
+    <span class="state" :class="{orange: c.running}">R</span> -->
   </div>
 </template>
 
 <script lang='ts'>
 import Vue from 'vue';
 import {isNull} from 'lodash';
-
-import { CombinedRecord, ComputedSection } from '@/types';
+import { OutgoingCombinedRecord } from '@/types';
 
 export default Vue.extend({
   props: {
     row: {
-      type: Object as () => CombinedRecord,
+      type: Object as () => OutgoingCombinedRecord,
     },
   },
   computed: {
-    c(): ComputedSection {
-      return this.row.computed;
-    },
     tooltip(): string {
-      return `${this.c.deployed ? 'deployed' : 'not deployed'}
-      ${isNull(this.row.replicas) ? '' : '(' + this.row.replicas + ' replicas)'}
-      |
-      ${this.c.running ? 'running' : 'not running'}
-      `;
+      return 'tip';
+      // return `${this.c.deployed ? 'deployed' : 'not deployed'}
+      // ${isNull(this.row.replicas) ? '' : '(' + this.row.replicas + ' replicas)'}
+      // |
+      // ${this.c.running ? 'running' : 'not running'}
+      // `;
     },
   },
 });

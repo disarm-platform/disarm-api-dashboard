@@ -28,7 +28,7 @@
               <span v-else class="disabled">repo</span>
               |
               <a
-                v-if="row.computed.deployed"
+                v-if="deployed"
                 :href="`https://faas.srv.disarm.io/functions/${row.function_name}`"
                 target="_blank"
               >fn</a>
@@ -79,6 +79,11 @@ export default Vue.extend({
     return {
       api_data: null as null | OutgoingCombinedRecord[],
     };
+  },
+  computed: {
+    deployed(): boolean {
+      return Math.random() > 0.5;
+    },
   },
   async mounted() {
     const list_url = `${process.env.VUE_APP_API_URL || CONFIG.api_url}/list`;

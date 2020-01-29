@@ -5,17 +5,12 @@
 <script lang='ts'>
 import Vue from 'vue';
 import { isNull } from 'lodash';
-import { CombinedRecord } from '@/types';
+import { OutgoingCombinedRecord } from '@/types';
 
 export default Vue.extend({
   props: {
     row: {
-      type: Object as () => CombinedRecord,
-    },
-  },
-  computed: {
-    c(): any {
-      return this.row.computed;
+      type: Object as () => OutgoingCombinedRecord,
     },
   },
 });
