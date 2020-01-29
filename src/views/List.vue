@@ -10,6 +10,8 @@
             <th>State</th>
             <th>Runs</th>
             <th>Actions</th>
+            <th>stack.yml</th>
+            <th>test_req.json</th>
             <th>Notes</th>
           </tr>
         </thead>
@@ -46,6 +48,8 @@
             <td>
               <Actions :row="row" />
             </td>
+            <td>stack.yml</td>
+            <td>test_req.json</td>
             <td>
               <Notes :row="row" />
             </td>
@@ -68,12 +72,13 @@ import Notes from '@/components/Notes.vue';
 import {logs_url} from '@/logs_url';
 
 import CONFIG from '@/config';
+import { OutgoingCombinedRecord } from '../types';
 
 export default Vue.extend({
   components: { Actions, State, Stats, Notes },
   data() {
     return {
-      api_data: null as null | CombinedRecord[],
+      api_data: null as null | OutgoingCombinedRecord[],
     };
   },
   async mounted() {
