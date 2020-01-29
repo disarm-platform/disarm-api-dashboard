@@ -64,7 +64,6 @@
 <script lang='ts'>
 import Vue from 'vue';
 
-import { CombinedRecord } from '@/types';
 import Actions from '@/components/Actions.vue';
 import State from '@/components/State.vue';
 import Stats from '@/components/Stats.vue';
