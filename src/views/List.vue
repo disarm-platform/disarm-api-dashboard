@@ -86,7 +86,7 @@ export default Vue.extend({
     },
   },
   async mounted() {
-    const list_url = `${process.env.VUE_APP_API_URL || CONFIG.api_url}/list`;
+    const list_url = `${CONFIG.api_url}/list`;
     const data = await fetch(list_url);
     const json = await data.json();
     this.api_data = json;

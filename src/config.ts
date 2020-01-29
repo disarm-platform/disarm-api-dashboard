@@ -1,7 +1,7 @@
 const secrets: string[] = [];
 
 export default {
-  api_url: 'https://europe-west1-disarm-platform.cloudfunctions.net/disarm-api-dashboard-api',
+  api_url: process.env.VUE_APP_API_URL || 'https://europe-west1-disarm-platform.cloudfunctions.net/disarm-api-dashboard-api',
   default_deploy_params: {
     labels: {
       // must be the string of true

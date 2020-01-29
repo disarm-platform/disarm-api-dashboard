@@ -40,14 +40,23 @@ export async function deploy(row: OutgoingCombinedRecord) {
 
   console.log(params);
 
-  // const url = `${process.env.VUE_APP_API_URL || CONFIG.api_url}/deploy`;
-  // const headers = {
-  //   'Content-Type': 'application/json',
-  //   'Accept': 'application/json, */*',
-  // };
+  const url = `${CONFIG.api_url}/deploy`;
+  const headers = {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json, */*',
+  };
 
-  // const request = await fetch(url, { method: 'POST', redirect: 'follow', body: JSON.stringify(deploy_params), headers);
-  // console.log(request);
+  try {
+    const request = await fetch(url, {
+      method: 'POST',
+      redirect: 'follow',
+      body: JSON.stringify(params),
+      headers,
+    });
+    console.log('request', request);
+  } catch (error) {
+    console.log(error);
+  }
 }
 
 function simple_params(row: OutgoingCombinedRecord): DeployParams | undefined {
