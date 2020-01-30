@@ -1,6 +1,6 @@
 import YAML from 'yaml';
 import { cloneDeep } from 'lodash';
-import CONFIG from './config';
+import CONFIG from '@/config';
 import { OutgoingCombinedRecord } from './types';
 
 export interface DeployParams {
