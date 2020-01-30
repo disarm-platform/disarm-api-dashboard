@@ -1,10 +1,10 @@
 const secrets: string[] = [];
 
 export default {
+  // all values must be the strings
   api_url: process.env.VUE_APP_API_URL || 'https://europe-west1-disarm-platform.cloudfunctions.net/disarm-api-dashboard-api',
   default_deploy_params: {
     labels: {
-      // must be the string of true
       'com.openfaas.scale.zero': 'true',
     },
     secrets,
