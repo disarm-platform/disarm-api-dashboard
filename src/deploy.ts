@@ -27,18 +27,17 @@ function make_base_params() {
   };
 }
 
-export async function deploy(row: OutgoingCombinedRecord) {
+export async function deploy(row: OutgoingCombinedRecord): Promise<string> {
   let params;
   if (row.target_image_version) {
     params = simple_params(row);
   } else if (row.repo) {
     params = await repo_params(row);
   } else {
-    console.error(`Trying to deploy without a repo or an image: ${JSON.stringify(row)}`);
-    return;
+    const error_message = `Trying to deploy without a repo or an image: ${JSON.stringify(row)}`;
+    console.error(error_message);
+    throw new Error(error_message);
   }
-
-  console.log(params);
 
   const url = `${CONFIG.api_url}/deploy`;
   const headers = {
@@ -54,8 +53,11 @@ export async function deploy(row: OutgoingCombinedRecord) {
       headers,
     });
     console.log('request', request);
+    const message = await request.text();
+    return message;
   } catch (error) {
     console.log(error);
+    throw error;
   }
 }
 
