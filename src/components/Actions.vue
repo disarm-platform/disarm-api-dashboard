@@ -16,36 +16,59 @@
       data-tooltip="Requires 'hide_from_deploy' checked in Airtable"
     >undeploy</button>
 
-    <button :disabled="!c.testable" @click="test">test</button> -->
-    
-    </div>
+    <button :disabled="!c.testable" @click="test">test</button>-->
+  </div>
 </template>
 
 <script lang='ts'>
 import Vue from 'vue';
 
-import {deploy} from '@/deploy';
+import { deploy } from '@/deploy';
 import { OutgoingCombinedRecord } from '@/types';
-
+import CONFIG from '@/config';
+import { undeploy } from '@/undeploy';
 export default Vue.extend({
   props: {
     row: {
       type: Object as () => OutgoingCombinedRecord,
     },
   },
+  data() {
+    return {
+      is_loading: false,
+    };
+  },
   methods: {
-    deploy() {
-      console.log('do: deploy', this.row.function_name);
-      deploy(this.row);
+    async deploy() {
+      this.is_loading = true;
+      try {
+        const message = await deploy(this.row);
+        // display message (optional)
+        this.is_loading = false;
+        // trigger list refresh
+      } catch (error) {
+        // display error
+        this.is_loading = false;
+        // trigger list refresh
+      }
     },
-    undeploy() {
-      console.log('do: undeploy', this.row.function_name);
+    async undeploy() {
+      this.is_loading = true;
+
+      try {
+        const message = await undeploy(this.row.function_name);
+        // display message (optional)
+        this.is_loading = false;
+        // trigger list refresh
+
+      } catch (error) {
+        // display error
+        this.is_loading = false;
+        // trigger list refresh
+      }
     },
     test() {
       console.log('do: test', this.row.function_name);
-    },
-    logs() {
-      console.log('do: logs', this.row.function_name);
     },
   },
 });
