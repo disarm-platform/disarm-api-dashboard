@@ -1,7 +1,8 @@
 <template>
   <div>
-    <button @click='deploy'>Deploy</button>
-    <button @click='undeploy'>Undeploy</button>
+    <span v-if='is_loading'>loading</span>
+    <button @click="deploy">Deploy</button>
+    <button @click="undeploy">Undeploy</button>
     <!-- <button
       :disabled="!row.target_image_version"
       class="success"
