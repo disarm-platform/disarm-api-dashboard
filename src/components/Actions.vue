@@ -1,6 +1,5 @@
 <template>
   <div>
-    <span v-if='is_loading'>loading</span>
     <button @click="deploy">Deploy</button>
     <button @click="undeploy">Undeploy</button>
     <!-- <button
@@ -24,46 +23,49 @@
 import Vue from 'vue';
 
 import { deploy } from '@/deploy';
-import { OutgoingCombinedRecord } from '@/types';
+import { OutgoingCombinedRecord, FunctionActions } from '@/types';
 import CONFIG from '@/config';
 import { undeploy } from '@/undeploy';
+import { EventBus } from '@/event_bus';
+
 export default Vue.extend({
   props: {
     row: {
       type: Object as () => OutgoingCombinedRecord,
     },
   },
-  data() {
-    return {
-      is_loading: false,
-    };
-  },
   methods: {
     async deploy() {
-      this.is_loading = true;
+      // this.is_loading = true;
+      EventBus.$emit(FunctionActions.loading_start, 'trying to deploying....');
       try {
-        const message = await deploy(this.row);
+        // const message = await deploy(this.row);
         // display message (optional)
-        this.is_loading = false;
-        // trigger list refresh
+        // this.is_loading = false;
+        setTimeout(() => {
+          EventBus.$emit(FunctionActions.loading_end, 'deployed successfully');
+          // trigger list refresh
+          EventBus.$emit(FunctionActions.refresh_list);
+
+        }, 5000);
       } catch (error) {
         // display error
-        this.is_loading = false;
-        // trigger list refresh
+        // this.is_loading = false;
+        EventBus.$emit(FunctionActions.loading_end, `ERROR: ${error}`);
       }
     },
     async undeploy() {
-      this.is_loading = true;
+      // this.is_loading = true;
 
       try {
         const message = await undeploy(this.row.function_name);
         // display message (optional)
-        this.is_loading = false;
+        // this.is_loading = false;
         // trigger list refresh
 
       } catch (error) {
         // display error
-        this.is_loading = false;
+        // this.is_loading = false;
         // trigger list refresh
       }
     },

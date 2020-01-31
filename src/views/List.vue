@@ -1,6 +1,7 @@
 
 <template>
   <div>
+    <Modal v-if="is_loading" :message='message' />
     <div v-if="api_data">
       <table>
         <thead>
@@ -34,10 +35,7 @@
               >fn</a>
               <span v-else class="disabled">fn</span>
               |
-              <a
-                :href="logs_url(row.function_name)"
-                target="_blank"
-              >logs</a>
+              <a :href="logs_url(row.function_name)" target="_blank">logs</a>
             </td>
             <td>
               <State :row="row" />
@@ -65,19 +63,23 @@
 import Vue from 'vue';
 
 import Actions from '@/components/Actions.vue';
+import Modal from '@/components/Modal.vue';
 import State from '@/components/State.vue';
 import Stats from '@/components/Stats.vue';
 import Notes from '@/components/Notes.vue';
-import {logs_url} from '@/logs_url';
+import { logs_url } from '@/logs_url';
+import { fetch_list } from '@/list';
 
-import CONFIG from '@/config';
-import { OutgoingCombinedRecord } from '../types';
+import { OutgoingCombinedRecord, FunctionActions } from '../types';
+import { EventBus } from '@/event_bus';
 
 export default Vue.extend({
-  components: { Actions, State, Stats, Notes },
+  components: { Actions, State, Stats, Modal, Notes },
   data() {
     return {
       api_data: null as null | OutgoingCombinedRecord[],
+      is_loading: false,
+      message: 'fetching functions...',
     };
   },
   computed: {
@@ -85,16 +87,34 @@ export default Vue.extend({
       return Math.random() > 0.5;
     },
   },
-  async mounted() {
-    const list_url = `${CONFIG.api_url}/list`;
-    const data = await fetch(list_url);
-    const json = await data.json();
-    this.api_data = json;
+  mounted() {
+    EventBus.$on(FunctionActions.start, this.show_modal);
+    EventBus.$on(FunctionActions.end, this.fetch_data);
+    // const url = `${CONFIG.api_url}/list`;
+    // const data = await fetch(url);
+    // const json = await data.json();
+    // this.api_data =  json;
+    this.fetch_data(this.message);
   },
   methods: {
     logs_url(function_name: string): string {
       const href = logs_url(function_name);
       return href;
+    },
+    show_modal(message: string) {
+      this.is_loading = true;
+      console.log(message);
+    },
+    hide_modal() {
+      this.is_loading = false;
+    },
+    fetch_data(message: string) {
+      this.message = message;
+      console.log(message);
+      fetch_list().then((value) => {
+        this.api_data = value;
+        this.hide_modal();
+      });
     },
   },
 });
