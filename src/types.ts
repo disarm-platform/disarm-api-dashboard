@@ -16,3 +16,9 @@ export interface OutgoingOpenfaasSection {
   deployed_invocation_count?: number; // openfaas_record.invocationCount
   replicas?: number; // openfaas_record.replicas
 }
+
+export enum FunctionActions {
+  loading_start = 'loading_start',
+  loading_end = 'loading_end',
+  refresh_list = 'refresh_list',
+}
