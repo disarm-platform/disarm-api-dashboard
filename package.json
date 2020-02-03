@@ -9,6 +9,7 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "@now/node": "^1.4.0",
     "@types/lodash": "^4.14.149",
     "@types/yaml": "^1.2.0",
     "lodash": "^4.17.15",
