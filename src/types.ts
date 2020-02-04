@@ -1,5 +1,10 @@
 export type OutgoingCombinedRecord = OutgoingBasicRecord & OutgoingAirtableSection & OutgoingOpenfaasSection;
 
+export type ModalObj =  OutgoingCombinedRecord & Modal | null;
+
+interface Modal {
+  message: string;
+}
 export interface OutgoingBasicRecord {
   function_name: string;
   missing_from_airtable: boolean;

@@ -26,18 +26,19 @@ function make_base_params() {
     envVars, labels, secrets,
   };
 }
-
-export async function deploy(row: OutgoingCombinedRecord): Promise<string> {
-  let params;
+export async function get_params(row: OutgoingCombinedRecord) {
   if (row.target_image_version) {
-    params = simple_params(row);
+    return simple_params(row);
   } else if (row.repo) {
-    params = await repo_params(row);
+    return await repo_params(row);
   } else {
     const error_message = `Trying to deploy without a repo or an image: ${JSON.stringify(row)}`;
     console.error(error_message);
     throw new Error(error_message);
   }
+
+}
+export async function deploy(params: DeployParams): Promise<string> {
 
   const url = `${CONFIG.api_url}/deploy`;
   const headers = {
@@ -130,6 +131,7 @@ function parse_stack_yml(stack_yml: any): StackJSON | undefined {
     throw new Error('More than 1 function defined in stack.yml. Cannot reliably select one');
   }
   const fn: any = Object.values(stack_yml.functions)[0];
+
   return {
     image: fn.image,
     environment: fn.environment,
