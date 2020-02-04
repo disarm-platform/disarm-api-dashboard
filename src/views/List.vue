@@ -1,7 +1,7 @@
 
 <template>
   <div>
-    <Modal v-if="is_loading" :message='message' />
+    <Modal :message="message" />
     <div v-if="api_data">
       <table>
         <thead>
@@ -78,7 +78,6 @@ export default Vue.extend({
   data() {
     return {
       api_data: null as null | OutgoingCombinedRecord[],
-      is_loading: false,
       message: 'fetching functions...',
     };
   },
@@ -88,33 +87,25 @@ export default Vue.extend({
     },
   },
   mounted() {
-    EventBus.$on(FunctionActions.start, this.show_modal);
-    EventBus.$on(FunctionActions.end, this.fetch_data);
+    EventBus.$on(FunctionActions.refresh_list, this.fetch_data);
     // const url = `${CONFIG.api_url}/list`;
     // const data = await fetch(url);
     // const json = await data.json();
     // this.api_data =  json;
     this.fetch_data(this.message);
   },
+  destroyed() {
+    EventBus.$off();
+  },
   methods: {
     logs_url(function_name: string): string {
       const href = logs_url(function_name);
       return href;
     },
-    show_modal(message: string) {
-      this.is_loading = true;
-      console.log(message);
-    },
-    hide_modal() {
-      this.is_loading = false;
-    },
     fetch_data(message: string) {
       this.message = message;
       console.log(message);
-      fetch_list().then((value) => {
-        this.api_data = value;
-        this.hide_modal();
-      });
+      fetch_list().then((value) => this.api_data = value);
     },
   },
 });
