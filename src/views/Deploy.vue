@@ -1,8 +1,8 @@
 <template>
   <div>
+    <h3>{{ title }}</h3>
     <article class="card" v-if="deploy_params">
       <div v-if="!showResults">
-        <h3>{{ title }}</h3>
         <textarea v-model="deploy_params" rows="20" placeholder="Textarea"></textarea>
         <footer>
           <button class="dangerous" @click="goBack">Cancel</button>
@@ -10,7 +10,6 @@
         </footer>
       </div>
       <div v-if="showResults">
-        <h3>Results</h3>
         <div>{{ response }}</div>
         <button @click="goBack">Go Back</button>
       </div>
@@ -72,7 +71,11 @@ export default Vue.extend({
         return;
       }
       if (this.deploy_params) {
-        deploy(JSON.parse(this.deploy_params)).then((value) => this.response = value);
+        deploy(JSON.parse(this.deploy_params)).then((value) => {
+          console.log(value);
+          this.response = value;
+          this.title = 'Results';
+          });
       } else {
         console.log('Cannot deploy with null params');
       }

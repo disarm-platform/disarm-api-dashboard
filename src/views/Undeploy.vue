@@ -5,7 +5,7 @@
         <h3>Are you sure you want to undeploy function {{ row.function_name }}?</h3>
         <footer>
           <button class="dangerous" @click="goBack">Cancel</button>
-          <button class="success" @click="undeploy">Go!</button>
+          <button class="warning" @click="undeploy">Go!</button>
         </footer>
       </div>
       <div v-if="showResults">

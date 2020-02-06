@@ -1,4 +1,4 @@
-import YAML from 'yaml';
+import YAML, { stringify } from 'yaml';
 import { cloneDeep } from 'lodash';
 import CONFIG from '@/config';
 import { OutgoingCombinedRecord } from './types';
@@ -53,11 +53,12 @@ export async function deploy(params: DeployParams): Promise<string> {
       body: JSON.stringify(params),
       headers,
     });
-    console.log('request', request);
-    const message = await request.text();
-    return message;
+    const response = await request;
+    if (typeof response.text !== 'function') {
+      return `Encountered an ${response.statusText} trying to deploy ${params.service}}`;
+    }
+    return request.text();
   } catch (error) {
-    console.log(error);
     throw error;
   }
 }
@@ -85,7 +86,11 @@ async function repo_params(row: OutgoingCombinedRecord): Promise<DeployParams | 
   if (stack_json) {
     base_params.envVars = { ...base_params.envVars, ...stack_json.environment };
     base_params.labels = { ...base_params.labels, ...stack_json.labels };
-    base_params.secrets = [...base_params.secrets, ...stack_json.secrets];
+    let secrets = [];
+    if (stack_json.secrets) {
+      secrets = stack_json.secrets;
+    }
+    base_params.secrets = [...base_params.secrets, ...secrets];
   }
 
   const deploy_params: DeployParams = {
@@ -93,7 +98,7 @@ async function repo_params(row: OutgoingCombinedRecord): Promise<DeployParams | 
     service: row.function_name,
     image: row.target_image_version || stack_json.image,
   };
-
+  console.log(deploy_params);
   return deploy_params;
 }
 
@@ -107,14 +112,25 @@ async function get_stack_json(row: OutgoingCombinedRecord): Promise<StackJSON | 
     const url = `https://raw.githubusercontent.com/${org}/${repo}/master/stack.yml`;
     const res = await fetch(url);
     const body = await res.text();
-    const stack_yml = YAML.parse(body);
+    const stack_yml = stringify_values(YAML.parse(body));
     return parse_stack_yml(stack_yml);
   } catch (error) {
     console.error(error);
   }
 }
 
-function extract_github_bits(repo_url: string) {
+function stringify_values(obj: any) {
+  Object.entries(obj).forEach(([key, value]) => {
+    if (typeof value !== 'object') {
+      obj[key] = `${value}`;
+    } else {
+      obj[key] = stringify_values(value);
+    }
+  });
+  return obj;
+}
+
+export function extract_github_bits(repo_url: string) {
   const [, , domain, org, repo] = repo_url.split('/');
   if (domain !== 'github.com') {
     throw new Error('Non-Github repo passed in: only configured to handle GH for now');
@@ -131,7 +147,6 @@ function parse_stack_yml(stack_yml: any): StackJSON | undefined {
     throw new Error('More than 1 function defined in stack.yml. Cannot reliably select one');
   }
   const fn: any = Object.values(stack_yml.functions)[0];
-
   return {
     image: fn.image,
     environment: fn.environment,
