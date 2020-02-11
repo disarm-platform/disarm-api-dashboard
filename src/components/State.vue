@@ -1,17 +1,19 @@
 <template>
   <div v-bind:data-tooltip="tooltip">
-
-  <spinner v-show="loading"/>
-    <!-- <span class="state" :class="{green: row., red: !c.deployed}" disabled>D</span>
-    <span class="state" :class="{orange: c.running}">R</span> -->
+    <spinner v-show="loading" />
+    <div v-show="!loading">
+      <span class="state" :class="{green: !running, red: running}" disabled>D</span>
+      <span class="state" :class="{orange: running}">R</span>
+    </div>
   </div>
 </template>
 
 <script lang='ts'>
 import Vue from 'vue';
-import {isNull} from 'lodash';
-import { OutgoingCombinedRecord } from '@/types';
+import { isNull } from 'lodash';
+import { OutgoingCombinedRecord, FunctionActions } from '@/types';
 import Spinner from '@/components/Spinner.vue';
+import { EventBus } from '@/event_bus';
 export default Vue.extend({
   components: { Spinner },
   props: {
@@ -21,17 +23,38 @@ export default Vue.extend({
   },
   data() {
     return {
-      loading: false,
+      loading: false as boolean,
     }
   },
   computed: {
     tooltip(): string {
-      return 'tip';
-      // return `${this.c.deployed ? 'deployed' : 'not deployed'}
-      // ${isNull(this.row.replicas) ? '' : '(' + this.row.replicas + ' replicas)'}
-      // |
-      // ${this.c.running ? 'running' : 'not running'}
-      // `;
+      let replicas = 0;
+      if (this.row.replicas) {
+        replicas = this.row.replicas;
+      }
+      return `${replicas > 0 ? 'deployed' : 'not deployed'}
+      ${!isNull(this.row.replicas) ? '' : '(' + this.row.replicas + ' replicas)'}
+      |
+      ${this.running ? 'running' : 'not running'}
+      `;
+    },
+    running() {
+      if (this.row.replicas) {
+        return this.row.replicas > 0;
+      }
+      return false;
+    },
+  },
+  mounted() {
+    EventBus.$on(FunctionActions.loading_start, this.toggleLoading);
+    EventBus.$on(FunctionActions.loading_end, this.toggleLoading);
+  },
+  destroyed() {
+    EventBus.$off();
+  },
+  methods: {
+    toggleLoading(value: boolean) {
+      this.loading = value;
     },
   },
 });
