@@ -74,6 +74,7 @@ import { OutgoingCombinedRecord, FunctionActions } from '../types';
 import { EventBus } from '@/event_bus';
 
 export default Vue.extend({
+  name: 'list',
   components: { Actions, State, Stats, Modal, Notes },
   data() {
     return {

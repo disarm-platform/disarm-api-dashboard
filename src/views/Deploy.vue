@@ -24,6 +24,7 @@ import { get_params } from '@/deploy';
 import flat from 'flat';
 import router from '../router';
 export default Vue.extend({
+  name: 'deploy',
   data() {
     return {
       deploy_params: null as null | string,
