@@ -1,7 +1,8 @@
 import YAML, { stringify } from 'yaml';
 import { cloneDeep } from 'lodash';
 import CONFIG from '@/config';
-import { OutgoingCombinedRecord } from './types';
+import { OutgoingCombinedRecord, FunctionActions } from './types';
+import { EventBus } from './event_bus';
 
 export interface DeployParams {
   service: string;
@@ -39,13 +40,12 @@ export async function get_params(row: OutgoingCombinedRecord) {
 
 }
 export async function deploy(params: DeployParams): Promise<string> {
-
+  EventBus.$emit(FunctionActions.loading_start, true);
   const url = `${CONFIG.api_url}/deploy`;
   const headers = {
     'Content-Type': 'application/json',
     'Accept': 'application/json, */*',
   };
-
   try {
     const request = await fetch(url, {
       method: 'POST',
@@ -57,8 +57,10 @@ export async function deploy(params: DeployParams): Promise<string> {
     if (typeof response.text !== 'function') {
       return `Encountered an ${response.statusText} trying to deploy ${params.service}}`;
     }
+    EventBus.$emit(FunctionActions.refresh_list);
     return request.text();
   } catch (error) {
+    EventBus.$emit(FunctionActions.loading_end, false);
     throw error;
   }
 }

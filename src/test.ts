@@ -1,6 +1,7 @@
-import { OutgoingCombinedRecord } from './types';
+import { OutgoingCombinedRecord, FunctionActions } from './types';
 import { extract_github_bits } from './deploy';
 import CONFIG from '@/config';
+import { EventBus } from './event_bus';
 
 export async function get_test_req_json(row: OutgoingCombinedRecord): Promise<string> {
     if (!row.repo) {
@@ -18,6 +19,7 @@ export async function get_test_req_json(row: OutgoingCombinedRecord): Promise<st
     }
 }
 export async function test(fn_name: string, test_req: any): Promise<string> {
+    EventBus.$emit(FunctionActions.loading_start, true);
     const url = `${CONFIG.gateway}/function/${fn_name}`;
     const headers = {
         'Content-Type': 'application/json',
@@ -36,8 +38,10 @@ export async function test(fn_name: string, test_req: any): Promise<string> {
         if (typeof request.text !== 'function') {
             return `Encountered an ${response.statusText} trying to test ${fn_name}}`;
         }
+        EventBus.$emit(FunctionActions.refresh_list);
         return request.text();
     } catch (error) {
+        EventBus.$emit(FunctionActions.loading_end, false);
         throw error;
     }
 }

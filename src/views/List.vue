@@ -1,7 +1,6 @@
 
 <template>
   <div>
-    <Modal :message="message" />
     <div v-if="api_data">
       <table>
         <thead>
@@ -11,8 +10,6 @@
             <th>State</th>
             <th>Runs</th>
             <th>Actions</th>
-            <th>stack.yml</th>
-            <th>test_req.json</th>
             <th>Notes</th>
           </tr>
         </thead>
@@ -46,8 +43,6 @@
             <td>
               <Actions :row="row" />
             </td>
-            <td>stack.yml</td>
-            <td>test_req.json</td>
             <td>
               <Notes :row="row" />
             </td>
@@ -88,13 +83,12 @@ export default Vue.extend({
     },
   },
   mounted() {
-    // EventBus.$on(FunctionActions.loading_start, this.show_modal);
-    // EventBus.$on(FunctionActions.loading_end, this.fetch_data);
+    EventBus.$on(FunctionActions.refresh_list, this.fetch_data);
     // const url = `${CONFIG.api_url}/list`;
     // const data = await fetch(url);
     // const json = await data.json();
     // this.api_data =  json;
-    this.fetch_data(this.message);
+    this.fetch_data();
   },
   destroyed() {
     EventBus.$off();
@@ -104,10 +98,13 @@ export default Vue.extend({
       const href = logs_url(function_name);
       return href;
     },
-    fetch_data(message: string) {
-      this.message = message;
-      console.log(message);
-      fetch_list().then((value) => this.api_data = value);
+    fetch_data() {
+      fetch_list().then((value) => {
+        this.$nextTick(() => {
+          this.api_data = value;
+          EventBus.$emit(FunctionActions.loading_end, false);
+        });
+      });
     },
   },
 });

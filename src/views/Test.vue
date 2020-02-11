@@ -5,7 +5,7 @@
     <article class="card" v-if="test_req">
       <div v-if="!showResults || showFetchTestReqRes">
         <textarea v-model="test_req" rows="20" placeholder="test_req.json"></textarea>
-        <footer>
+        <footer v-if="working">
           <button class="dangerous" @click="goBack">Cancel</button>
           <button class="success" @click="test">Go!</button>
         </footer>
@@ -28,6 +28,7 @@ export default Vue.extend({
     return {
       test_req: null as null | any,
       response: null as null | any,
+      working: true,
       test_req_response: '',
       title: '',
     };
@@ -69,6 +70,7 @@ export default Vue.extend({
   },
   methods: {
     test() {
+      this.working = false;
       this.title = `Testing ${this.row.function_name}...`;
       if (this.check_json_validity(this.test_req)) {
         this.test_req_response = '';

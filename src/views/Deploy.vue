@@ -4,7 +4,7 @@
     <article class="card" v-if="deploy_params">
       <div v-if="!showResults">
         <textarea v-model="deploy_params" rows="20" placeholder="Textarea"></textarea>
-        <footer>
+        <footer v-if="working">
           <button class="dangerous" @click="goBack">Cancel</button>
           <button class="success" @click="deploy">Go!</button>
         </footer>
@@ -21,7 +21,6 @@ import Vue from 'vue';
 import { OutgoingCombinedRecord } from '../types';
 import { DeployParams, deploy } from '../deploy';
 import { get_params } from '@/deploy';
-import flat from 'flat';
 import router from '../router';
 export default Vue.extend({
   name: 'deploy',
@@ -29,6 +28,7 @@ export default Vue.extend({
     return {
       deploy_params: null as null | string,
       response: '',
+      working: true,
       title: '',
     };
   },
@@ -49,7 +49,7 @@ export default Vue.extend({
     try {
       get_params(this.row).then((value) => { this.deploy_params = JSON.stringify(value, undefined, 2); });
     } catch (error) {
-      throw error;
+      this.deploy_params = '';
     }
     this.title = `Confirm deploy ${this.row.function_name}`;
     // setTimeout(() => {
@@ -68,6 +68,7 @@ export default Vue.extend({
       return false;
     },
     deploy() {
+      this.working = false;
       if (!this.check_json_validity(this.deploy_params)) {
         return;
       }

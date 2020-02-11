@@ -3,7 +3,7 @@
     <article class="card">
       <div v-if="!showResults">
         <h3>Are you sure you want to undeploy function {{ row.function_name }}?</h3>
-        <footer>
+        <footer v-if="working">
           <button class="dangerous" @click="goBack">Cancel</button>
           <button class="warning" @click="undeploy">Go!</button>
         </footer>
@@ -29,6 +29,7 @@ export default Vue.extend({
   data() {
     return {
       response: '',
+      working: true,
     };
   },
   computed: {
@@ -46,6 +47,7 @@ export default Vue.extend({
     },
     undeploy() {
       console.log(`undeploying ${this.row.function_name}`);
+      this.working = false;
       undeploy(this.row.function_name).then((value) => this.response = value);
     },
   },
