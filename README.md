@@ -1,5 +1,16 @@
 # disarm-api-dashboard
 
+## Env vars
+
+### For UI
+- `VUE_APP_OPENFAAS_URL`: https://faas.srv.disarm.io
+
+### For API
+- `OPENFAAS_KEY`: required (note the URL is taken from the UI OpenFaas setting)
+- `AIRTABLE_KEY`: required
+- `AIRTABLE_URL`: defaults to https://api.airtable.com/v0/appUekRZWqLHK31zF/Algos
+
+
 ## Project setup
 ```
 npm install

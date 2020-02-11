@@ -83,11 +83,8 @@ export default Vue.extend({
     },
   },
   mounted() {
+    console.log('here');
     EventBus.$on(FunctionActions.refresh_list, this.fetch_data);
-    // const url = `${CONFIG.api_url}/list`;
-    // const data = await fetch(url);
-    // const json = await data.json();
-    // this.api_data =  json;
     this.fetch_data();
   },
   destroyed() {

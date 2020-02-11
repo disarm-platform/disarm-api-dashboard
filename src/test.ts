@@ -20,7 +20,7 @@ export async function get_test_req_json(row: OutgoingCombinedRecord): Promise<st
 }
 export async function test(fn_name: string, test_req: any): Promise<string> {
     EventBus.$emit(FunctionActions.loading_start, true);
-    const url = `${CONFIG.gateway}/function/${fn_name}`;
+    const url = `${CONFIG.openfaas_url}/function/${fn_name}`;
     const headers = {
         'Content-Type': 'application/json',
         'Accept': 'application/json, */*',

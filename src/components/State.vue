@@ -24,7 +24,7 @@ export default Vue.extend({
   data() {
     return {
       loading: false as boolean,
-    }
+    };
   },
   computed: {
     tooltip(): string {

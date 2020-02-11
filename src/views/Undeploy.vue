@@ -18,9 +18,10 @@
 </template>
 <script lang="ts">
 import Vue from 'vue';
-import { OutgoingCombinedRecord } from '@/types';
+import { OutgoingCombinedRecord, FunctionActions } from '@/types';
 import router from '@/router';
 import { undeploy } from '@/undeploy';
+import { EventBus } from '@/event_bus';
 export default Vue.extend({
   name: 'undeploy',
   props: {
@@ -45,10 +46,17 @@ export default Vue.extend({
     goBack() {
       router.go(-1);
     },
-    undeploy() {
-      console.log(`undeploying ${this.row.function_name}`);
+    async undeploy() {
       this.working = false;
-      undeploy(this.row.function_name).then((value) => this.response = value);
+      EventBus.$emit(FunctionActions.loading_start, true);
+      try {
+        const value = await undeploy(this.row.function_name);
+        this.response = value;
+        EventBus.$emit(FunctionActions.refresh_list);
+      } catch (error) {
+        EventBus.$emit(FunctionActions.loading_end, false);
+        throw (error);
+      }
     },
   },
 });

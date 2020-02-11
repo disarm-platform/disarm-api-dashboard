@@ -1,0 +1,25 @@
+{
+  "env": {
+    "VUE_APP_OPENFAAS_URL": "@VUE_APP_OPENFAAS_URL",
+    "OPENFAAS_KEY": "@OPENFAAS_KEY",
+    "AIRTABLE_KEY": "@AIRTABLE_KEY",
+    "AIRTABLE_URL": "@AIRTABLE_URL"
+  },
+  "routes": [
+    // {
+    //   "src": "/api(.*)",
+    //   "dest": "/api/$1",
+    //   "headers": {
+    //     "Access-Control-Allow-Origin": "*",
+    //     "Access-Control-Allow-Headers": "*"
+    //   }
+    // },
+    // {
+    //   "handle": "filesystem"
+    // },
+    {
+      "src": "/.*",
+      "dest": "/index.html"
+    }
+  ]
+}

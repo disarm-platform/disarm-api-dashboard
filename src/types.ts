@@ -27,3 +27,18 @@ export enum FunctionActions {
   loading_end = 'loading_end',
   refresh_list = 'refresh_list',
 }
+
+// API
+export interface IncomingAirtableRecord {
+  function_name: string;
+  image: string;
+  repo: string;
+}
+
+export interface IncomingOpenFaasRecord {
+  name: string;
+  image: string;
+  invocationCount: number;
+  replicas: number;
+  availableReplicas: number;
+}
