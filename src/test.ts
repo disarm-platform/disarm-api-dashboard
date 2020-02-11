@@ -2,7 +2,7 @@ import { OutgoingCombinedRecord } from './types';
 import { extract_github_bits } from './deploy';
 import CONFIG from '@/config';
 
-export async function get_test_req_json(row: OutgoingCombinedRecord): Promise<any | undefined> {
+export async function get_test_req_json(row: OutgoingCombinedRecord): Promise<string> {
     if (!row.repo) {
         return `test_req.json not found, place test data here `;
     }
@@ -14,6 +14,7 @@ export async function get_test_req_json(row: OutgoingCombinedRecord): Promise<an
         return body;
     } catch (error) {
         console.error(error);
+        return error;
     }
 }
 export async function test(fn_name: string, test_req: any): Promise<string> {
@@ -27,16 +28,15 @@ export async function test(fn_name: string, test_req: any): Promise<string> {
         const request = await fetch(url, {
             method: 'POST',
             redirect: 'follow',
-            mode: 'no-cors',
             body: JSON.stringify(test_req),
             headers,
         });
         const response = await request;
         console.log('request:', request);
-        if (typeof response.text !== 'function') {
+        if (typeof request.text !== 'function') {
             return `Encountered an ${response.statusText} trying to test ${fn_name}}`;
         }
-        return response.text();
+        return request.text();
     } catch (error) {
         throw error;
     }
