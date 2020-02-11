@@ -1,6 +1,8 @@
 <template>
   <div v-bind:data-tooltip="tooltip">
-    <!-- <span class="state" :class="{green: c.deployed, red: !c.deployed}" disabled>D</span>
+
+  <spinner v-show="loading"/>
+    <!-- <span class="state" :class="{green: row., red: !c.deployed}" disabled>D</span>
     <span class="state" :class="{orange: c.running}">R</span> -->
   </div>
 </template>
@@ -9,12 +11,18 @@
 import Vue from 'vue';
 import {isNull} from 'lodash';
 import { OutgoingCombinedRecord } from '@/types';
-
+import Spinner from '@/components/Spinner.vue';
 export default Vue.extend({
+  components: { Spinner },
   props: {
     row: {
       type: Object as () => OutgoingCombinedRecord,
     },
+  },
+  data() {
+    return {
+      loading: false,
+    }
   },
   computed: {
     tooltip(): string {

@@ -23,6 +23,7 @@ import { OutgoingCombinedRecord } from '@/types';
 import { get_test_req_json, test } from '@/test';
 import router from '@/router';
 export default Vue.extend({
+  name: 'test',
   data() {
     return {
       test_req: null as null | any,

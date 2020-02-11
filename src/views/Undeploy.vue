@@ -22,6 +22,7 @@ import { OutgoingCombinedRecord } from '@/types';
 import router from '@/router';
 import { undeploy } from '@/undeploy';
 export default Vue.extend({
+  name: 'undeploy',
   props: {
     row: Object as () => OutgoingCombinedRecord,
   },
