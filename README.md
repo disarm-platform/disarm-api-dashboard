@@ -46,3 +46,7 @@ Access to the dashboard is open. Data comes from Airtable and the OpenFaaS API, 
 ## Actions
 
 Airtable acts as the data backend, and access is controlled by Airtable. The `deploy` action depends on Airtable containing the required fields.
+
+## Now
+
+Trying out deployment with `now.sh`, need to remember this: the API will get served up on port 3000. Obvs...
