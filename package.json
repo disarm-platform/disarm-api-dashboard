@@ -9,8 +9,10 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "@types/flat": "0.0.28",
     "@types/lodash": "^4.14.149",
     "@types/yaml": "^1.2.0",
+    "flat": "^5.0.0",
     "lodash": "^4.17.15",
     "picnic": "^6.5.2",
     "v-datatable-light": "^0.8.0",
