@@ -96,9 +96,15 @@ export default Vue.extend({
       return href;
     },
     async fetch_data() {
-      console.log('fetch');
-      const value = await fetch_list();
-      this.api_data = value;
+      try {
+        EventBus.$emit(BusActions.loading_start);
+        const value = await fetch_list();
+        this.api_data = value;
+      } catch (error) {
+        throw error;
+      } finally {
+        EventBus.$emit(BusActions.loading_end);
+      }
     },
   },
 });

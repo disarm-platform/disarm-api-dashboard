@@ -6,7 +6,7 @@
       <div v-if="!showResults || showFetchTestReqRes">
         <textarea v-model="test_req" rows="20" placeholder="test_req.json"></textarea>
         <footer v-if="working">
-          <button class="dangerous" @click="goBack">Cancel</button>
+          <button class="dangerous" @click="$router.go(-1)">Cancel</button>
           <button class="success" @click="test">Go!</button>
         </footer>
       </div>
@@ -83,14 +83,11 @@ export default Vue.extend({
       }
 
       try {
-        EventBus.$emit(BusActions.loading_start);
         const value = await test(this.row.function_name, JSON.parse(this.test_req));
         this.response = value;
         this.title = `Results`;
       } catch (error) {
         throw error;
-      } finally {
-        EventBus.$emit(BusActions.loading_end);
       }
     },
     check_json_validity(json: any) {

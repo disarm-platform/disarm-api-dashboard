@@ -80,15 +80,12 @@ export default Vue.extend({
         return console.log('Cannot deploy with null params');
       }
       try {
-        EventBus.$emit(BusActions.loading_start);
         const value = await deploy(JSON.parse(this.deploy_params));
         this.response = value;
         this.title = 'Results';
         EventBus.$emit(BusActions.refresh_list);
       } catch (error) {
         throw error;
-      } finally {
-        EventBus.$emit(BusActions.loading_end);
       }
     },
   },

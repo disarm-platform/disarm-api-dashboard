@@ -48,13 +48,11 @@ export default Vue.extend({
     },
     async undeploy() {
       this.working = false;
-      EventBus.$emit(BusActions.loading_start);
       try {
         const value = await undeploy(this.row.function_name);
         this.response = value;
         EventBus.$emit(BusActions.refresh_list);
       } catch (error) {
-        EventBus.$emit(BusActions.loading_end);
         throw error;
       }
     },
