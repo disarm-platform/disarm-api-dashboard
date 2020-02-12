@@ -11,17 +11,21 @@
         </footer>
       </div>
       <div v-if="showResults">
-        <div><textarea v-model="response" rows="20" placeholder="test_response"></textarea></div>
-        <button @click="goBack">Go Back</button>
+        <div>
+          <textarea v-model="response" rows="20" placeholder="test_response"></textarea>
+        </div>
+        <button @click="$router.go(-1)">Go Back</button>
       </div>
     </article>
   </div>
 </template>
+
 <script lang="ts">
 import Vue from 'vue';
-import { OutgoingCombinedRecord } from '@/types';
+import { OutgoingCombinedRecord, BusActions } from '@/types';
 import { get_test_req_json, test } from '@/test';
 import router from '@/router';
+import { EventBus } from '../event_bus';
 export default Vue.extend({
   name: 'test',
   data() {
@@ -69,22 +73,25 @@ export default Vue.extend({
     }
   },
   methods: {
-    test() {
+    async test() {
+      this.test_req_response = '';
       this.working = false;
       this.title = `Testing ${this.row.function_name}...`;
-      if (this.check_json_validity(this.test_req)) {
-        this.test_req_response = '';
-        test(this.row.function_name, JSON.parse(this.test_req))
-          .then((value) => {
-            this.response = value;
-            this.title = `Results`;
-          });
-      } else {
-        this.response = 'invalid JSON';
+
+      if (!this.check_json_validity(this.test_req)) {
+        return this.response = 'invalid JSON';
       }
-    },
-    goBack() {
-      router.go(-1);
+
+      try {
+        EventBus.$emit(BusActions.loading_start);
+        const value = await test(this.row.function_name, JSON.parse(this.test_req));
+        this.response = value;
+        this.title = `Results`;
+      } catch (error) {
+        throw error;
+      } finally {
+        EventBus.$emit(BusActions.loading_end);
+      }
     },
     check_json_validity(json: any) {
       try {

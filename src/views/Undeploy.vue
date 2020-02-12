@@ -55,7 +55,7 @@ export default Vue.extend({
         EventBus.$emit(BusActions.refresh_list);
       } catch (error) {
         EventBus.$emit(BusActions.loading_end, false);
-        throw (error);
+        throw error;
       }
     },
   },

@@ -11,7 +11,7 @@
       </div>
       <div v-if="showResults">
         <div>{{ response }}</div>
-        <button @click="goBack">Go Back</button>
+        <button @click="$router.go(-1)">Go Back</button>
       </div>
     </article>
   </div>
@@ -79,9 +79,6 @@ export default Vue.extend({
       } else {
         console.log('Cannot deploy with null params');
       }
-    },
-    goBack() {
-      router.go(-1);
     },
   },
 });
