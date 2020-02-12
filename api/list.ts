@@ -44,6 +44,9 @@ async function fetch_and_combine() {
 
 async function fetch_airtable(): Promise<IncomingAirtableRecord[]> {
   const url = CONFIG.airtable_url;
+  if (!url) {
+    throw new Error('Missing AIRTABLE_URL env var');
+  }
   const headers = { Authorization: CONFIG.airtable_key };
   try {
     const res = await axios.get(url, { headers });
