@@ -87,7 +87,6 @@ export default Vue.extend({
 });
 </script>
 <style scoped>
-@import "../../node_modules/picnic/picnic.min.css";
 .button {
   margin: 0.5 0.5em;
 }
