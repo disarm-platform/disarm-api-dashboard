@@ -1,8 +1,8 @@
 {
   "env": {
-    "VUE_APP_OPENFAAS_URL": "@VUE_APP_OPENFAAS_URL",
-    "OPENFAAS_KEY": "@OPENFAAS_KEY",
-    "AIRTABLE_KEY": "@AIRTABLE_KEY",
-    "AIRTABLE_URL": "@AIRTABLE_URL"
+    "vue_app_openfaas_url": "@VUE_APP_OPENFAAS_URL",
+    "openfaas_key": "@OPENFAAS_KEY",
+    "airtable_key": "@AIRTABLE_KEY",
+    "airtable_url": "@AIRTABLE_URL"
   }
 }
