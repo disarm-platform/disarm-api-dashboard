@@ -9,7 +9,6 @@ export function logs_url(function_name: string): string {
     customFacets: '',
     limitCustomFacetWidth: 'true',
     interval: 'NO_LIMIT',
-    resource: 'gce_instance/instance_id/9017316993004217383',
     dateRangeUnbound: 'forwardInTime',
     advancedFilter: `jsonPayload.container.imageName:${function_name}`,
   };

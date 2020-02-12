@@ -1,9 +1,10 @@
 <template>
   <div>
     <spinner v-if="loading" />
+    <span v-if="!deployed" class='subtle'>--</span>
     <span
       v-else
-      :class="{highlight: row.deployed_invocation_count !== 0}"
+      :class="{subtle: row.deployed_invocation_count === 0}"
     >{{row.deployed_invocation_count}}</span>
   </div>
 </template>
@@ -27,6 +28,11 @@ export default Vue.extend({
       loading: false,
     };
   },
+  computed: {
+    deployed(): boolean {
+      return this.row.hasOwnProperty('deployed_image_version');
+    },
+  },
   mounted() {
     EventBus.$on(BusActions.loading_start, () => this.loading = true);
     EventBus.$on(BusActions.loading_end, () => this.loading = false);
@@ -40,8 +46,5 @@ export default Vue.extend({
 <style scoped>
 .subtle {
   color: lightgrey;
-}
-.highlight {
-  color: #2c74d9;
 }
 </style>

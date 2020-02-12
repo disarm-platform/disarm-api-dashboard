@@ -2,21 +2,21 @@
   <div>
     <h3>{{ title }}</h3>
     <h4 v-if="showFetchTestReqRes">{{ test_req_response }}</h4>
-    <article class="card" v-if="test_req">
-      <div v-if="!showResults || showFetchTestReqRes">
-        <textarea v-model="test_req" rows="20" placeholder="test_req.json"></textarea>
-        <footer v-if="working">
-          <button class="dangerous" @click="$router.go(-1)">Cancel</button>
-          <button class="success" @click="test">Go!</button>
-        </footer>
+
+    <div v-if="!showResults || showFetchTestReqRes">
+      <textarea v-model="test_req" rows="20" placeholder="test_req.json"></textarea>
+      <footer v-if="working">
+        <button class="dangerous" @click="$router.go(-1)">Cancel</button>
+        <button class="success" @click="test">Go!</button>
+      </footer>
+    </div>
+
+    <div v-if="showResults">
+      <div>
+        <textarea v-model="response" rows="20" placeholder="test_response"></textarea>
       </div>
-      <div v-if="showResults">
-        <div>
-          <textarea v-model="response" rows="20" placeholder="test_response"></textarea>
-        </div>
-        <button @click="$router.go(-1)">Go Back</button>
-      </div>
-    </article>
+      <button @click="$router.go(-1)">Go Back</button>
+    </div>
   </div>
 </template>
 
