@@ -57,12 +57,9 @@ export async function deploy(params: DeployParams): Promise<string> {
     if (typeof response.text !== 'function') {
       return `Encountered an ${response.statusText} trying to deploy ${params.service}}`;
     }
-    EventBus.$emit(BusActions.refresh_list);
     return request.text();
   } catch (error) {
     throw error;
-  } finally {
-    EventBus.$emit(BusActions.loading_end, false);
   }
 }
 
@@ -70,7 +67,9 @@ function simple_params(row: OutgoingCombinedRecord): DeployParams | undefined {
   if (!row.target_image_version) {
     return;
   }
+
   const base_params = make_base_params();
+
   return {
     ...base_params,
     service: row.function_name,

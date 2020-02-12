@@ -81,9 +81,11 @@ export default Vue.extend({
       return Math.random() > 0.5;
     },
   },
+  async created() {
+    await this.fetch_data();
+  },
   mounted() {
     EventBus.$on(BusActions.refresh_list, this.fetch_data);
-    this.fetch_data();
   },
   destroyed() {
     EventBus.$off();
@@ -93,13 +95,10 @@ export default Vue.extend({
       const href = logs_url(function_name);
       return href;
     },
-    fetch_data() {
-      fetch_list().then((value) => {
-        this.$nextTick(() => {
-          this.api_data = value;
-          EventBus.$emit(BusActions.loading_end, false);
-        });
-      });
+    async fetch_data() {
+      console.log('fetch');
+      const value = await fetch_list();
+      this.api_data = value;
     },
   },
 });

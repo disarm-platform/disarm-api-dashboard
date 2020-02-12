@@ -19,9 +19,10 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { OutgoingCombinedRecord } from '@/types';
+import { OutgoingCombinedRecord, BusActions } from '@/types';
 import { DeployParams, deploy, get_params } from '@/deploy';
 import router from '@/router';
+import { EventBus } from '../event_bus';
 
 export default Vue.extend({
   name: 'deploy',
@@ -52,7 +53,7 @@ export default Vue.extend({
     async try_get_params() {
       this.title = `fetching params for ${this.row.function_name}`;
       try {
-        const value = get_params(this.row);
+        const value = await get_params(this.row);
         this.deploy_params = JSON.stringify(value, undefined, 2);
       } catch (error) {
         this.deploy_params = '';
@@ -78,10 +79,17 @@ export default Vue.extend({
       if (!this.deploy_params) {
         return console.log('Cannot deploy with null params');
       }
-      const value = await deploy(JSON.parse(this.deploy_params));
-      console.log(value);
-      this.response = value;
-      this.title = 'Results';
+      try {
+        EventBus.$emit(BusActions.loading_start);
+        const value = await deploy(JSON.parse(this.deploy_params));
+        this.response = value;
+        this.title = 'Results';
+        EventBus.$emit(BusActions.refresh_list);
+      } catch (error) {
+        throw error;
+      } finally {
+        EventBus.$emit(BusActions.loading_end);
+      }
     },
   },
 });
