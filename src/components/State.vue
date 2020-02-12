@@ -28,21 +28,13 @@ export default Vue.extend({
   },
   computed: {
     tooltip(): string {
-      let replicas = 0;
-      if (this.row.replicas) {
-        replicas = this.row.replicas;
-      }
-      return `${replicas > 0 ? 'deployed' : 'not deployed'}
+      return `${this.deployed ? 'deployed ' + this.row.replicas + ' replicas' : 'not deployed'}
       |
       ${this.running ? 'running' : 'not running'}
-      (${this.row.replicas} replicas)
       `;
     },
     running(): boolean {
-      if (this.row.replicas) {
-        return this.row.replicas > 0;
-      }
-      return false;
+      return !!(this.row.replicas && this.row.replicas > 0);
     },
     deployed(): boolean {
       return this.row.hasOwnProperty('deployed_image_version');
