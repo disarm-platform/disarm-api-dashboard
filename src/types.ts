@@ -22,7 +22,7 @@ export interface OutgoingOpenfaasSection {
   replicas?: number; // openfaas_record.replicas
 }
 
-export enum FunctionActions {
+export enum BusActions {
   loading_start = 'loading_start',
   loading_end = 'loading_end',
   refresh_list = 'refresh_list',

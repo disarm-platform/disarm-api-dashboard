@@ -1,7 +1,7 @@
-import YAML, { stringify } from 'yaml';
+import YAML from 'yaml';
 import { cloneDeep } from 'lodash';
 import CONFIG from '@/config';
-import { OutgoingCombinedRecord, FunctionActions } from './types';
+import { OutgoingCombinedRecord, BusActions } from './types';
 import { EventBus } from './event_bus';
 
 export interface DeployParams {
@@ -27,6 +27,7 @@ function make_base_params() {
     envVars, labels, secrets,
   };
 }
+
 export async function get_params(row: OutgoingCombinedRecord) {
   if (row.target_image_version) {
     return simple_params(row);
@@ -40,7 +41,7 @@ export async function get_params(row: OutgoingCombinedRecord) {
 
 }
 export async function deploy(params: DeployParams): Promise<string> {
-  EventBus.$emit(FunctionActions.loading_start, true);
+  EventBus.$emit(BusActions.loading_start, true);
   const url = `${CONFIG.api_url}/deploy`;
   const headers = {
     'Content-Type': 'application/json',
@@ -57,10 +58,10 @@ export async function deploy(params: DeployParams): Promise<string> {
     if (typeof response.text !== 'function') {
       return `Encountered an ${response.statusText} trying to deploy ${params.service}}`;
     }
-    EventBus.$emit(FunctionActions.refresh_list);
+    EventBus.$emit(BusActions.refresh_list);
     return request.text();
   } catch (error) {
-    EventBus.$emit(FunctionActions.loading_end, false);
+    EventBus.$emit(BusActions.loading_end, false);
     throw error;
   }
 }

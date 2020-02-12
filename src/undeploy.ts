@@ -22,5 +22,3 @@ export async function undeploy(function_name: string): Promise<string> {
     throw error;
   }
 }
-
-

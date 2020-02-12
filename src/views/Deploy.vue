@@ -52,8 +52,6 @@ export default Vue.extend({
       this.deploy_params = '';
     }
     this.title = `Confirm deploy ${this.row.function_name}`;
-    // setTimeout(() => {
-    // }, 5000);
   },
   methods: {
     check_json_validity(json: any) {

@@ -58,19 +58,18 @@
 import Vue from 'vue';
 
 import Actions from '@/components/Actions.vue';
-import Modal from '@/components/Modal.vue';
 import State from '@/components/State.vue';
 import Stats from '@/components/Stats.vue';
 import Notes from '@/components/Notes.vue';
 import { logs_url } from '@/logs_url';
 import { fetch_list } from '@/list';
 
-import { OutgoingCombinedRecord, FunctionActions } from '../types';
+import { OutgoingCombinedRecord, BusActions } from '@/types';
 import { EventBus } from '@/event_bus';
 
 export default Vue.extend({
   name: 'list',
-  components: { Actions, State, Stats, Modal, Notes },
+  components: { Actions, State, Stats, Notes },
   data() {
     return {
       api_data: null as null | OutgoingCombinedRecord[],
@@ -83,8 +82,7 @@ export default Vue.extend({
     },
   },
   mounted() {
-    console.log('here');
-    EventBus.$on(FunctionActions.refresh_list, this.fetch_data);
+    EventBus.$on(BusActions.refresh_list, this.fetch_data);
     this.fetch_data();
   },
   destroyed() {
@@ -99,7 +97,7 @@ export default Vue.extend({
       fetch_list().then((value) => {
         this.$nextTick(() => {
           this.api_data = value;
-          EventBus.$emit(FunctionActions.loading_end, false);
+          EventBus.$emit(BusActions.loading_end, false);
         });
       });
     },

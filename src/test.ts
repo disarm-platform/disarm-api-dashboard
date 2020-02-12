@@ -1,4 +1,4 @@
-import { OutgoingCombinedRecord, FunctionActions } from './types';
+import { OutgoingCombinedRecord, BusActions } from './types';
 import { extract_github_bits } from './deploy';
 import CONFIG from '@/config';
 import { EventBus } from './event_bus';
@@ -18,8 +18,9 @@ export async function get_test_req_json(row: OutgoingCombinedRecord): Promise<st
         return error;
     }
 }
+
 export async function test(fn_name: string, test_req: any): Promise<string> {
-    EventBus.$emit(FunctionActions.loading_start, true);
+    EventBus.$emit(BusActions.loading_start, true);
     const url = `${CONFIG.openfaas_url}/function/${fn_name}`;
     const headers = {
         'Content-Type': 'application/json',
@@ -38,10 +39,10 @@ export async function test(fn_name: string, test_req: any): Promise<string> {
         if (typeof request.text !== 'function') {
             return `Encountered an ${response.statusText} trying to test ${fn_name}}`;
         }
-        EventBus.$emit(FunctionActions.refresh_list);
+        EventBus.$emit(BusActions.refresh_list);
         return request.text();
     } catch (error) {
-        EventBus.$emit(FunctionActions.loading_end, false);
+        EventBus.$emit(BusActions.loading_end, false);
         throw error;
     }
 }

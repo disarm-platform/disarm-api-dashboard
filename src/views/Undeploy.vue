@@ -18,7 +18,7 @@
 </template>
 <script lang="ts">
 import Vue from 'vue';
-import { OutgoingCombinedRecord, FunctionActions } from '@/types';
+import { OutgoingCombinedRecord, BusActions } from '@/types';
 import router from '@/router';
 import { undeploy } from '@/undeploy';
 import { EventBus } from '@/event_bus';
@@ -48,13 +48,13 @@ export default Vue.extend({
     },
     async undeploy() {
       this.working = false;
-      EventBus.$emit(FunctionActions.loading_start, true);
+      EventBus.$emit(BusActions.loading_start, true);
       try {
         const value = await undeploy(this.row.function_name);
         this.response = value;
-        EventBus.$emit(FunctionActions.refresh_list);
+        EventBus.$emit(BusActions.refresh_list);
       } catch (error) {
-        EventBus.$emit(FunctionActions.loading_end, false);
+        EventBus.$emit(BusActions.loading_end, false);
         throw (error);
       }
     },

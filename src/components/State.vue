@@ -11,7 +11,7 @@
 <script lang='ts'>
 import Vue from 'vue';
 import { isNull } from 'lodash';
-import { OutgoingCombinedRecord, FunctionActions } from '@/types';
+import { OutgoingCombinedRecord, BusActions } from '@/types';
 import Spinner from '@/components/Spinner.vue';
 import { EventBus } from '@/event_bus';
 export default Vue.extend({
@@ -46,8 +46,8 @@ export default Vue.extend({
     },
   },
   mounted() {
-    EventBus.$on(FunctionActions.loading_start, this.toggleLoading);
-    EventBus.$on(FunctionActions.loading_end, this.toggleLoading);
+    EventBus.$on(BusActions.loading_start, this.toggleLoading);
+    EventBus.$on(BusActions.loading_end, this.toggleLoading);
   },
   destroyed() {
     EventBus.$off();
