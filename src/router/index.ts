@@ -22,12 +22,10 @@ const routes = [
     component: Deploy,
     props: true,
     beforeEnter: (to: Route, from: Route, next: Next) => {
-      console.log(to, from);
-      if (to.params.hasOwnProperty('row')) {
-        next();
-      } else {
-        next('/');
+      if (!to.params.hasOwnProperty('row')) {
+        return next('/');
       }
+      next();
     },
   },
   {
@@ -36,12 +34,10 @@ const routes = [
     component: Undeploy,
     props: true,
     beforeEnter: (to: Route, from: Route, next: Next) => {
-      console.log(to, from);
-      if (to.params.hasOwnProperty('row')) {
-        next();
-      } else {
-        next('/');
+      if (!to.params.hasOwnProperty('row')) {
+        return next('/');
       }
+      next();
     },
   },
   {
@@ -50,12 +46,10 @@ const routes = [
     props: true,
     component: Test,
     beforeEnter: (to: Route, from: Route, next: Next) => {
-      console.log(to, from);
-      if (to.params.hasOwnProperty('row')) {
-        next();
-      } else {
-        next('/');
+      if (!to.params.hasOwnProperty('row')) {
+        return next('/');
       }
+      next();
     },
   },
 ];

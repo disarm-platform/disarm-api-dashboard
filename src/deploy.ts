@@ -41,7 +41,6 @@ export async function get_params(row: OutgoingCombinedRecord) {
 
 }
 export async function deploy(params: DeployParams): Promise<string> {
-  EventBus.$emit(BusActions.loading_start, true);
   const url = `${CONFIG.api_url}/deploy`;
   const headers = {
     'Content-Type': 'application/json',
@@ -61,8 +60,9 @@ export async function deploy(params: DeployParams): Promise<string> {
     EventBus.$emit(BusActions.refresh_list);
     return request.text();
   } catch (error) {
-    EventBus.$emit(BusActions.loading_end, false);
     throw error;
+  } finally {
+    EventBus.$emit(BusActions.loading_end, false);
   }
 }
 

@@ -5,7 +5,7 @@
       <div v-if="!showResults">
         <textarea v-model="deploy_params" rows="20" placeholder="Textarea"></textarea>
         <footer v-if="working">
-          <button class="dangerous" @click="goBack">Cancel</button>
+          <button class="dangerous" @click="$router.go(-1)">Cancel</button>
           <button class="success" @click="deploy">Go!</button>
         </footer>
       </div>
@@ -16,12 +16,13 @@
     </article>
   </div>
 </template>
+
 <script lang="ts">
 import Vue from 'vue';
-import { OutgoingCombinedRecord } from '../types';
-import { DeployParams, deploy } from '../deploy';
-import { get_params } from '@/deploy';
-import router from '../router';
+import { OutgoingCombinedRecord } from '@/types';
+import { DeployParams, deploy, get_params } from '@/deploy';
+import router from '@/router';
+
 export default Vue.extend({
   name: 'deploy',
   data() {
@@ -45,15 +46,19 @@ export default Vue.extend({
     },
   },
   mounted() {
-    this.title = `fetching params for ${this.row.function_name}`;
-    try {
-      get_params(this.row).then((value) => { this.deploy_params = JSON.stringify(value, undefined, 2); });
-    } catch (error) {
-      this.deploy_params = '';
-    }
-    this.title = `Confirm deploy ${this.row.function_name}`;
+    this.try_get_params();
   },
   methods: {
+    async try_get_params() {
+      this.title = `fetching params for ${this.row.function_name}`;
+      try {
+        const value = get_params(this.row);
+        this.deploy_params = JSON.stringify(value, undefined, 2);
+      } catch (error) {
+        this.deploy_params = '';
+      }
+      this.title = `Confirm deploy ${this.row.function_name}`;
+    },
     check_json_validity(json: any) {
       try {
         const obj = JSON.parse(json);
@@ -65,20 +70,18 @@ export default Vue.extend({
       }
       return false;
     },
-    deploy() {
+    async deploy() {
       this.working = false;
       if (!this.check_json_validity(this.deploy_params)) {
         return;
       }
-      if (this.deploy_params) {
-        deploy(JSON.parse(this.deploy_params)).then((value) => {
-          console.log(value);
-          this.response = value;
-          this.title = 'Results';
-          });
-      } else {
-        console.log('Cannot deploy with null params');
+      if (!this.deploy_params) {
+        return console.log('Cannot deploy with null params');
       }
+      const value = await deploy(JSON.parse(this.deploy_params));
+      console.log(value);
+      this.response = value;
+      this.title = 'Results';
     },
   },
 });

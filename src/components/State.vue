@@ -1,8 +1,8 @@
 <template>
   <div v-bind:data-tooltip="tooltip">
-    <spinner v-show="loading" />
-    <div v-show="!loading">
-      <span class="state" :class="{green: !running, red: running}" disabled>D</span>
+    <spinner v-if="loading" />
+    <div v-else>
+      <span class="state" :class="{green: deployed, red: !deployed}" disabled>D</span>
       <span class="state" :class="{orange: running}">R</span>
     </div>
   </div>
@@ -23,7 +23,7 @@ export default Vue.extend({
   },
   data() {
     return {
-      loading: false as boolean,
+      loading: false,
     };
   },
   computed: {
@@ -33,29 +33,27 @@ export default Vue.extend({
         replicas = this.row.replicas;
       }
       return `${replicas > 0 ? 'deployed' : 'not deployed'}
-      ${!isNull(this.row.replicas) ? '' : '(' + this.row.replicas + ' replicas)'}
       |
       ${this.running ? 'running' : 'not running'}
+      (${this.row.replicas} replicas)
       `;
     },
-    running() {
+    running(): boolean {
       if (this.row.replicas) {
         return this.row.replicas > 0;
       }
       return false;
     },
+    deployed(): boolean {
+      return this.row.hasOwnProperty('deployed_image_version');
+    },
   },
   mounted() {
-    EventBus.$on(BusActions.loading_start, this.toggleLoading);
-    EventBus.$on(BusActions.loading_end, this.toggleLoading);
+    EventBus.$on(BusActions.loading_start, () => this.loading = true);
+    EventBus.$on(BusActions.loading_end, () => this.loading = false);
   },
   destroyed() {
     EventBus.$off();
-  },
-  methods: {
-    toggleLoading(value: boolean) {
-      this.loading = value;
-    },
   },
 });
 </script>
