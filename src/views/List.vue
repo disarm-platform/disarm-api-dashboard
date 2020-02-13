@@ -35,9 +35,10 @@
         </tbody>
       </table>
     </div>
-    <div v-else-if='auth_error'>
+    <div v-else-if="auth_error">
       Problem with credentials
-      Try logging-in <a href="/logout">Login</a>
+      Try logging-in
+      <a href="/logout">Login</a>
     </div>
     <div v-else>Loading data...</div>
   </div>
