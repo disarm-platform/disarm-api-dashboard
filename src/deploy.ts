@@ -44,7 +44,7 @@ export async function get_params(row: OutgoingCombinedRecord) {
 export async function deploy(params: DeployParams): Promise<string> {
   const auth_header = get_auth_header();
   if (!auth_header) {
-    throw new Error('No authorisation key');
+    throw { name: 'MissingAuthError', message: 'No authorisation key' };
   }
 
   const url = `${CONFIG.api_url}/deploy`;

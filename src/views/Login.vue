@@ -27,7 +27,7 @@ export default Vue.extend({
   methods: {
     submit() {
       set_auth(this.username, this.password);
-      this.$router.push('/');
+      this.$router.push('list');
     },
   },
 });

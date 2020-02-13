@@ -28,6 +28,10 @@ export enum BusActions {
   refresh_list = 'refresh_list',
 }
 
+export enum CustomErrors {
+  Auth = 'Auth',
+}
+
 // API
 export interface IncomingAirtableRecord {
   function_name: string;

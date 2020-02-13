@@ -15,6 +15,10 @@ type Next = (to?: RawLocation | false | ((vm: Vue) => any) | void) => void;
 
 const routes = [
   {
+    path: '/',
+    redirect: '/list',
+  },
+  {
     path: '/login',
     name: 'login',
     component: Login,
@@ -25,7 +29,7 @@ const routes = [
     component: Logout,
   },
   {
-    path: '/',
+    path: '/list',
     name: 'list',
     component: List,
     beforeEnter: (to: Route, from: Route, next: Next) => {

@@ -10,7 +10,7 @@ import { remove_auth } from '@/auth';
 export default Vue.extend({
   mounted() {
     remove_auth();
-    this.$router.push('/');
+    this.$router.push('list');
   },
 });
 </script>
