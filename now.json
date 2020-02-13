@@ -3,6 +3,7 @@
     "VUE_APP_OPENFAAS_URL": "@vue_app_openfaas_url",
     "OPENFAAS_KEY": "@openfaas_key",
     "AIRTABLE_KEY": "@airtable_key",
-    "AIRTABLE_URL": "@airtable_url"
+    "AIRTABLE_URL": "@airtable_url",
+    "VUE_APP_CORS_PROXY": "@vue_app_cors_proxy"
   }
 }

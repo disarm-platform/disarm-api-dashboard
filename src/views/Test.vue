@@ -57,9 +57,13 @@ export default Vue.extend({
     },
   },
   mounted() {
-    this.title = `fetching test_req.json for ${this.row.function_name}`;
-    try {
-      get_test_req_json(this.row).then((value) => {
+    this.try_get_test_json();
+  },
+  methods: {
+    async try_get_test_json() {
+      this.title = `fetching test_req.json for ${this.row.function_name}`;
+      try {
+        const value = await get_test_req_json(this.row);
         if (this.check_json_validity(value)) {
           this.test_req_response = `successfully fetched test req from repo`;
           this.test_req = value;
@@ -67,12 +71,10 @@ export default Vue.extend({
           this.test_req_response = `Test req could not be found, check if repo exists and test_req is on the root folder`;
           this.test_req = JSON.stringify({});
         }
-      });
-    } catch (error) {
-      throw error;
-    }
-  },
-  methods: {
+      } catch (error) {
+        throw error;
+      }
+    },
     async test() {
       this.test_req_response = '';
       this.working = false;
@@ -90,16 +92,13 @@ export default Vue.extend({
         throw error;
       }
     },
-    check_json_validity(json: any) {
+    check_json_validity(json: any): boolean {
       try {
         const obj = JSON.parse(json);
-        if (obj && typeof obj === 'object' && obj !== null) {
-          return true;
-        }
+        return (obj && typeof obj === 'object' && obj !== null);
       } catch (err) {
-        console.error(err);
+        return false;
       }
-      return false;
     },
   },
 });
