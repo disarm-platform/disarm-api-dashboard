@@ -17,5 +17,5 @@ export default {
       combine_output: 'false',
     },
   },
-  cors_proxy: process.env.VUE_APP_CORS_PROXY || 'https://cors-anywhere.herokuapp.com',
+  cors_proxy: process.env.VUE_APP_CORS_PROXY || 'https://cors-anywhere.srv.disarm.io',
 };
