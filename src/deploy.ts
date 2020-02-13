@@ -49,6 +49,7 @@ export async function deploy(params: DeployParams): Promise<string> {
 
   const url = `${CONFIG.api_url}/deploy`;
   const headers = {
+    ...auth_header,
     'Content-Type': 'application/json',
     'Accept': 'application/json, */*',
   };

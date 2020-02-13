@@ -9,6 +9,7 @@ export async function undeploy(function_name: string): Promise<string> {
 
   const url = `${CONFIG.api_url}/undeploy`;
   const headers = {
+    ...auth_header,
     'Content-Type': 'application/json',
     'Accept': 'application/json, */*',
   };
