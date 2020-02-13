@@ -5,10 +5,12 @@
 
 <script lang='ts'>
 import Vue from 'vue';
+import { remove_auth } from '@/auth';
 
 export default Vue.extend({
   mounted() {
-    this.$auth.logout();
-  }
+    remove_auth();
+    this.$router.push('/');
+  },
 });
 </script>

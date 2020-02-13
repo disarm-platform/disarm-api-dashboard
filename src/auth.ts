@@ -18,3 +18,7 @@ export function get_auth_header() {
     return null;
   }
 }
+
+export function remove_auth() {
+  localStorage.removeItem(CONFIG.auth_key);
+}

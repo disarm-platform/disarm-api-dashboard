@@ -1,10 +1,10 @@
 
 <template>
   <div>
-    <h1>Login demo</h1>
+    <h1>Login</h1>
     <form @submit.prevent="submit">
       <input placeholder="Login" type="text" v-model="username" />
-      <input placeholder="Password" type="password" v-model="password" />
+      <input ref='password' placeholder="Password" type="password" v-model="password" />
       <button type="submit">Login</button>
     </form>
   </div>
@@ -12,21 +12,23 @@
 
 <script lang='ts'>
 import Vue from 'vue';
+import { set_auth } from '../auth';
 
 export default Vue.extend({
   data() {
     return {
-      username: undefined as string | undefined,
-      password: undefined as string | undefined,
+      username: 'admin',
+      password: '',
     };
+  },
+  mounted() {
+    (this.$refs.password as any).focus();
   },
   methods: {
     submit() {
-      this.$auth.login({
-        username: this.username,
-        password: this.password,
-      });
-    }
+      set_auth(this.username, this.password);
+      this.$router.push('/');
+    },
   },
 });
 </script>

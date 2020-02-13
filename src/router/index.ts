@@ -6,6 +6,7 @@ import Undeploy from '@/views/Undeploy.vue';
 import Test from '@/views/Test.vue';
 import Vue from 'vue';
 import VueRouter, { Route, RawLocation } from 'vue-router';
+import { get_auth_header, get_auth } from '@/auth';
 
 Vue.use(VueRouter);
 
@@ -27,6 +28,13 @@ const routes = [
     path: '/',
     name: 'list',
     component: List,
+    beforeEnter: (to: Route, from: Route, next: Next) => {
+      const auth_string = get_auth();
+      if (!auth_string) {
+        return next('/login');
+      }
+      next();
+    },
   },
   {
     path: '/deploy',
