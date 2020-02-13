@@ -1,9 +1,12 @@
+import Login from '@/views/Login.vue';
+import Logout from '@/views/Logout.vue';
 import List from '@/views/List.vue';
 import Deploy from '@/views/Deploy.vue';
 import Undeploy from '@/views/Undeploy.vue';
 import Test from '@/views/Test.vue';
 import Vue from 'vue';
 import VueRouter, { Route, RawLocation } from 'vue-router';
+import { get_auth_header, get_auth } from '@/auth';
 
 Vue.use(VueRouter);
 
@@ -13,8 +16,29 @@ type Next = (to?: RawLocation | false | ((vm: Vue) => any) | void) => void;
 const routes = [
   {
     path: '/',
+    redirect: '/list',
+  },
+  {
+    path: '/login',
+    name: 'login',
+    component: Login,
+  },
+  {
+    path: '/logout',
+    name: 'logout',
+    component: Logout,
+  },
+  {
+    path: '/list',
     name: 'list',
     component: List,
+    beforeEnter: (to: Route, from: Route, next: Next) => {
+      const auth_string = get_auth();
+      if (!auth_string) {
+        return next('/login');
+      }
+      next();
+    },
   },
   {
     path: '/deploy',

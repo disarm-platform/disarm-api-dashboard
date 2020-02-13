@@ -4,6 +4,12 @@ import { CONFIG } from './config';
 import { has_required_deploy_params, action_error, action_success } from './utils';
 
 export default async function(req: express.Request, res: express.Response) {
+  if (req.headers.authorization !== process.env.AUTHORIZATION) {
+    res.writeHead(401);
+    res.end('Unauthorised');
+    return;
+  }
+
   try {
     if (!has_required_deploy_params(req)) {
       return action_error(res, 'Missing required service or image parameters for deploy');
