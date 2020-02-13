@@ -1,3 +1,5 @@
+import Login from '@/views/Login.vue';
+import Logout from '@/views/Logout.vue';
 import List from '@/views/List.vue';
 import Deploy from '@/views/Deploy.vue';
 import Undeploy from '@/views/Undeploy.vue';
@@ -12,14 +14,30 @@ type Next = (to?: RawLocation | false | ((vm: Vue) => any) | void) => void;
 
 const routes = [
   {
+    path: '/login',
+    name: 'login',
+    component: Login,
+  },
+  {
+    path: '/logout',
+    name: 'logout',
+    component: Logout,
+  },
+  {
     path: '/',
     name: 'list',
     component: List,
+    meta: {
+      auth: true,
+    },
   },
   {
     path: '/deploy',
     name: 'deploy',
     component: Deploy,
+    meta: {
+      auth: true,
+    },
     props: true,
     beforeEnter: (to: Route, from: Route, next: Next) => {
       if (!to.params.hasOwnProperty('row')) {
@@ -32,6 +50,9 @@ const routes = [
     path: '/undeploy',
     name: 'undeploy',
     component: Undeploy,
+    meta: {
+      auth: true,
+    },
     props: true,
     beforeEnter: (to: Route, from: Route, next: Next) => {
       if (!to.params.hasOwnProperty('row')) {
@@ -45,6 +66,9 @@ const routes = [
     name: 'test',
     props: true,
     component: Test,
+    meta: {
+      auth: true,
+    },
     beforeEnter: (to: Route, from: Route, next: Next) => {
       if (!to.params.hasOwnProperty('row')) {
         return next('/');

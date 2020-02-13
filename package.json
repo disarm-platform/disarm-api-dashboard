@@ -10,6 +10,7 @@
     "dev": "vue-cli-service serve --port $PORT"
   },
   "dependencies": {
+    "@d0whc3r/vue-auth-plugin": "^1.7.0",
     "@now/node": "^1.4.0",
     "@types/express": "^4.17.2",
     "@types/flat": "0.0.28",
