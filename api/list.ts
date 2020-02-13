@@ -10,6 +10,12 @@ import {
 } from '../src/types';
 
 export default async function(req: express.Request, res: express.Response) {
+  if (req.headers.authorization !== process.env.AUTHORIZATION) {
+    res.writeHead(401);
+    res.end('Unauthorised');
+    return;
+  }
+
   try {
     const data = await fetch_and_combine();
     res.writeHead(200, { 'Content-Type': 'application/json' });

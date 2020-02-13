@@ -4,6 +4,12 @@ import { CONFIG } from './config';
 import { action_error, action_success } from './utils';
 
 export default async function(req: express.Request, res: express.Response) {
+  if (req.headers.authorization !== process.env.AUTHORIZATION) {
+    res.writeHead(401);
+    res.end('Unauthorised');
+    return;
+  }
+
   try {
     const function_name = req.body.function_name;
     const url = `${CONFIG.openfaas_url}/system/functions`;
