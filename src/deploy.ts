@@ -3,6 +3,7 @@ import { cloneDeep } from 'lodash';
 import CONFIG from '@/config';
 import { OutgoingCombinedRecord, BusActions } from './types';
 import { EventBus } from './event_bus';
+import { get_auth_header } from './auth';
 
 export interface DeployParams {
   service: string;
@@ -41,6 +42,11 @@ export async function get_params(row: OutgoingCombinedRecord) {
 
 }
 export async function deploy(params: DeployParams): Promise<string> {
+  const auth_header = get_auth_header();
+  if (!auth_header) {
+    throw new Error('No authorisation key');
+  }
+
   const url = `${CONFIG.api_url}/deploy`;
   const headers = {
     'Content-Type': 'application/json',

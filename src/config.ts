@@ -18,4 +18,5 @@ export default {
     },
   },
   cors_proxy: process.env.VUE_APP_CORS_PROXY || 'https://cors-anywhere.herokuapp.com',
+  auth_key: 'auth_string',
 };

@@ -27,17 +27,11 @@ const routes = [
     path: '/',
     name: 'list',
     component: List,
-    meta: {
-      auth: true,
-    },
   },
   {
     path: '/deploy',
     name: 'deploy',
     component: Deploy,
-    meta: {
-      auth: true,
-    },
     props: true,
     beforeEnter: (to: Route, from: Route, next: Next) => {
       if (!to.params.hasOwnProperty('row')) {
@@ -50,9 +44,6 @@ const routes = [
     path: '/undeploy',
     name: 'undeploy',
     component: Undeploy,
-    meta: {
-      auth: true,
-    },
     props: true,
     beforeEnter: (to: Route, from: Route, next: Next) => {
       if (!to.params.hasOwnProperty('row')) {
@@ -66,9 +57,6 @@ const routes = [
     name: 'test',
     props: true,
     component: Test,
-    meta: {
-      auth: true,
-    },
     beforeEnter: (to: Route, from: Route, next: Next) => {
       if (!to.params.hasOwnProperty('row')) {
         return next('/');
