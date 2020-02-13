@@ -28,6 +28,6 @@ body {
   padding: 8px;
 }
 .content {
-  padding: 15px;
+  padding-top: 10px;
 }
 </style>
