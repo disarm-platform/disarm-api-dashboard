@@ -5,15 +5,29 @@
         <span style="font-weight: 900;">DiSARM Dashboard</span>
       </div>
       <div class="half" style="text-align: right;">
-        <router-link to="logout" v-if='$route.name !== "login"'>Logout</router-link>
+        <router-link to="logout" v-if="$route.name !== 'login'">Logout</router-link>
       </div>
     </div>
 
     <keep-alive include="list">
       <router-view class="content" />
     </keep-alive>
+
+    <footer class="subtle">version {{version}}</footer>
   </div>
 </template>
+
+<script lang="ts">
+import Vue from 'vue';
+export default Vue.extend({
+  data() {
+    return {
+      version: process.env.VUE_APP_VERSION,
+    };
+  },
+});
+</script>
+
 
 <style>
 body {
@@ -29,5 +43,9 @@ body {
 }
 .content {
   padding-top: 10px;
+}
+.subtle {
+  text-align: right;
+  color: lightgray;
 }
 </style>
