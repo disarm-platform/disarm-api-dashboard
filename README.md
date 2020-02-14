@@ -3,10 +3,13 @@
 ## Env vars
 
 ### For UI
-- `VUE_APP_OPENFAAS_URL`: https://faas.srv.disarm.io
+Stick in `.env.build` file
+- `VUE_APP_OPENFAAS_URL`: defaults to https://faas.srv.disarm.io
+- `VUE_APP_CORS_PROXY: defaults to https://cors-anywhere.srv.disarm.io
 
 ### For API
-- `OPENFAAS_KEY`: required (note the URL is taken from the UI OpenFaas setting)
+Stick in a `.env`
+- `OPENFAAS_KEY`: required
 - `AIRTABLE_KEY`: required
 - `AIRTABLE_URL`: defaults to https://api.airtable.com/v0/appUekRZWqLHK31zF/Algos
 
