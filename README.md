@@ -1,4 +1,8 @@
-# disarm-api-dashboard
+# DiSARM API management dashboard
+
+Tool to help us manage the deployed DiSARM algorithms and functions.
+
+Dashboard itself is deployed on Zeit/Now - which includes both the UI and the backend/API.
 
 ## Env vars
 
