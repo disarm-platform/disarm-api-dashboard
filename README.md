@@ -9,7 +9,7 @@ Dashboard itself is deployed on Zeit/Now - which includes both the UI and the ba
 ### For UI
 Stick in `.env.build` file
 - `VUE_APP_OPENFAAS_URL`: defaults to https://faas.srv.disarm.io
-- `VUE_APP_CORS_PROXY: defaults to https://cors-anywhere.srv.disarm.io
+- `VUE_APP_CORS_PROXY`: defaults to https://cors-anywhere.srv.disarm.io
 
 ### For API
 Stick in a `.env`
