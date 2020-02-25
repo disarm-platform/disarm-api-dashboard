@@ -4,6 +4,11 @@ Tool to help us manage the deployed DiSARM algorithms and functions.
 
 Dashboard itself is deployed on Zeit/Now - which includes both the UI and the backend/API.
 
+## Requirements
+
+- Airtable: 
+- OpenFaas installation: see [OpenFaas docs](https://www.openfaas.com/)
+
 ## Env vars
 
 ### For UI
