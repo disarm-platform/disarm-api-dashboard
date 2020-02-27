@@ -11,9 +11,11 @@ Dashboard itself is deployed on Zeit/Now - which includes both the UI and the ba
 
 ## Env vars
 
+Not sure whether the files below actually get picked up by either the now dev server or the Vue CLI: i.e. they might be useles with the `now` deployment approach
+
 ### For UI
 Stick in `.env.build` file
-- `VUE_APP_API_URL`: optional, defaults to `/api` (i.e. same host as UI)
+- `VUE_APP_API_URL`: optional, defaults to `/api` (i.e. same host as UI) - beware of CORS issues blocking this
 - `VUE_APP_OPENFAAS_URL`: optional, defaults to https://faas.srv.disarm.io
 - `VUE_APP_CORS_PROXY: optional, defaults to https://cors-anywhere.srv.disarm.io
 

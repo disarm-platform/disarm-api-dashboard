@@ -2,7 +2,7 @@ const secrets: string[] = [];
 
 export default {
   // all values must be the strings
-  api_url: '/api',
+  api_url: process.env.VUE_APP_API_URL || '/api',
   openfaas_url: process.env.VUE_APP_OPENFAAS_URL || 'https://faas.srv.disarm.io',
   default_deploy_params: {
     labels: {
