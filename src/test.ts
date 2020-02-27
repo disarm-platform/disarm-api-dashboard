@@ -34,13 +34,10 @@ export async function test(fn_name: string, test_req: any): Promise<string> {
       headers,
     });
     const response = await request;
-    if (typeof request.text !== 'function') {
-      return `Encountered an ${response.statusText} trying to test ${fn_name}}`;
+    if (response.status !== 200) {
+      return `Function ${fn_name} returned ${response.status} error.`;
     }
 
-    if (response.status !== 200) {
-      return `function returned ${response.status} error.`;
-    }
     return request.text();
   } catch (error) {
     throw error;
