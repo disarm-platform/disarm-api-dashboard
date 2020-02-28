@@ -1,30 +1,43 @@
 <template>
   <div>
-    <h3>{{ title }}</h3>
-    <h3 v-if="run_time">{{run_time}}</h3>
-    <h4 v-if="showFetchTestReqRes">{{ test_req_response }}</h4>
+    <h3>Testing: {{row.function_name}}</h3>
+    <ul>
+      <li v-for="(message, i) in messages" :key="i" class="message">{{message}}</li>
+    </ul>
 
-    <div v-if="!showResults || showFetchTestReqRes">
-      <textarea
-        v-model="test_req"
-        rows="20"
-        @input="changed"
-        placeholder="test_req.json"
-        :disabled="!working"
-      ></textarea>
-      <footer v-if="working">
-        <button class="dangerous" @click="$router.go(-1)">Cancel</button>
-        <button class="success" :disabled="!request_valid" @click="test">Go!</button>
-        <span class="negative" v-if="!request_valid">input is not valid json</span>
-      </footer>
-    </div>
+    <div class="tabs two">
+      <input ref="tab1" id="tab-1" type="radio" name="tabgroupB" checked />
+      <label class="pseudo button toggle" for="tab-1">Request</label>
+      <input ref="tab2" id="tab-2" type="radio" name="tabgroupB" />
+      <label class="pseudo button toggle" for="tab-2">Response</label>
 
-    <div v-if="showResults">
-      <div>
-        <pre>{{formattedResponse}}</pre>
+      <div class="row">
+        <!-- REQUEST -->
+        <div>
+          <textarea
+            v-model="request"
+            rows="20"
+            @input="update_validity"
+            :disabled="sending_request"
+          ></textarea>
+
+          <footer v-if="!sending_request">
+            <button class="success" :disabled="!request_valid" @click="test">Go!</button>
+            <span class="notify" v-if="!request_valid && request">Input is not valid JSON</span>
+          </footer>
+        </div>
+
+        <!-- RESPONSE -->
+        <div>
+          <div v-if="response">
+            <pre>{{formattedResponse}}</pre>
+          </div>
+          <div v-else-if="!sending_request">Waiting for request to be sent.</div>
+          <div v-else>Waiting for request to complete...</div>
+        </div>
       </div>
-      <button @click="$router.go(-1)">Go Back</button>
     </div>
+    <button @click="$router.go(-1)">Back to list</button>
   </div>
 </template>
 
@@ -38,26 +51,17 @@ export default Vue.extend({
   name: 'test',
   data() {
     return {
-      test_req: null as null | any,
-      response: null as null | string,
-      working: true,
-      test_req_response: '',
-      title: '',
+      sending_request: false,
+      request: null as null | any,
       request_valid: false,
-      run_time: null as null | any,
+      response: null as null | string,
+      messages: [] as string[],
     };
   },
   props: {
     row: Object as () => OutgoingCombinedRecord,
   },
   computed: {
-    showFetchTestReqRes() {
-      if (!this.test_req_response || this.test_req_response === '') {
-        return false;
-      } else {
-        return true;
-      }
-    },
     formattedResponse(): string {
       if (this.response === null) {
         return '';
@@ -68,49 +72,43 @@ export default Vue.extend({
         return this.response;
       }
     },
-    showResults() {
-      if (!this.response || this.response === null) {
-        return false;
-      } else {
-        return true;
-      }
-    },
   },
   mounted() {
     this.try_get_test_json();
   },
   methods: {
-    changed() {
-      this.request_valid = this.check_json_validity(this.test_req);
+    update_validity() {
+      this.request_valid = this.check_json_validity(this.request);
     },
     async try_get_test_json() {
-      this.title = `fetching test_req.json for ${this.row.function_name}`;
+      this.messages.push(`Fetching test_req.json for ${this.row.function_name}`);
       try {
         const value = await get_test_req_json(this.row);
         if (this.check_json_validity(value)) {
-          this.test_req_response = `successfully fetched test req from repo`;
-          this.test_req = value;
+          this.messages.push(`Successfully fetched test req from repo`);
+          this.request = JSON.stringify(JSON.parse(value), null, 2);
         } else {
-          this.test_req_response = `Test req could not be found, check if repo exists and test_req is on the root folder`;
-          this.test_req = JSON.stringify({});
+          this.messages.push(`Test req could not be found, check if repo exists and a 'test_req.json' file is in the root folder`);
+          this.request = JSON.stringify({});
         }
-        this.changed();
+        this.update_validity();
       } catch (error) {
         throw error;
       }
     },
     async test() {
-      this.test_req_response = '';
-      this.working = false;
-      this.title = `Testing ${this.row.function_name}...`;
+      this.sending_request = true;
+      this.messages.push(`Sending request...`);
 
       try {
         const start = Date.now();
-        const value = await test(this.row.function_name, JSON.parse(this.test_req));
+        const value = await test(this.row.function_name, JSON.parse(this.request));
         const end = Date.now();
+
         this.response = value;
-        this.title = `Results of running ${this.row.function_name}`;
-        this.run_time = `Runtime : ${(end - start) / 1000} seconds `;
+        this.messages.push(`Results of running ${this.row.function_name}`);
+        this.messages.push(`Runtime : ${(end - start) / 1000} seconds`);
+        (this.$refs.tab2 as HTMLInputElement).click();
       } catch (error) {
         throw error;
       }
@@ -126,3 +124,16 @@ export default Vue.extend({
   },
 });
 </script>
+
+<style lang="css" scoped>
+.notify {
+  color: red;
+  margin-left: 10px;
+}
+.message {
+  color: grey;
+}
+.message:last-child {
+  color: inherit;
+}
+</style>
