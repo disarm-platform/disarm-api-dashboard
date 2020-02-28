@@ -4,16 +4,18 @@
     <h4 v-if="showFetchTestReqRes">{{ test_req_response }}</h4>
 
     <div v-if="!showResults || showFetchTestReqRes">
-      <textarea v-model="test_req" rows="20" placeholder="test_req.json"></textarea>
+      
+      <textarea v-model="test_req" rows="20" @input="changed" placeholder="test_req.json" :disabled="!working"></textarea>
       <footer v-if="working">
         <button class="dangerous" @click="$router.go(-1)">Cancel</button>
-        <button class="success" @click="test">Go!</button>
+        <button class="success"  :disabled="!request_valid" @click="test">Go!</button>
+        <span class="negative" v-if="!request_valid">input is not valid json</span>
       </footer>
     </div>
 
     <div v-if="showResults">
       <div>
-        <textarea v-model="response" rows="20" placeholder="test_response"></textarea>
+        <pre>{{formattedResponse}}</pre>
       </div>
       <button @click="$router.go(-1)">Go Back</button>
     </div>
@@ -31,10 +33,11 @@ export default Vue.extend({
   data() {
     return {
       test_req: null as null | any,
-      response: null as null | any,
+      response: null as null | string,
       working: true,
       test_req_response: '',
       title: '',
+      request_valid:false
     };
   },
   props: {
@@ -46,6 +49,16 @@ export default Vue.extend({
         return false;
       } else {
         return true;
+      }
+    },
+    formattedResponse():string{
+      if(this.response === null){
+        return '';
+      };
+      try{
+        return JSON.stringify(JSON.parse(this.response), null, 2)
+      }catch{
+        return this.response;
       }
     },
     showResults() {
@@ -60,6 +73,9 @@ export default Vue.extend({
     this.try_get_test_json();
   },
   methods: {
+    changed(){
+     this.request_valid = this.check_json_validity(this.test_req);
+    },
     async try_get_test_json() {
       this.title = `fetching test_req.json for ${this.row.function_name}`;
       try {
@@ -71,6 +87,7 @@ export default Vue.extend({
           this.test_req_response = `Test req could not be found, check if repo exists and test_req is on the root folder`;
           this.test_req = JSON.stringify({});
         }
+        this.changed();
       } catch (error) {
         throw error;
       }
@@ -80,13 +97,8 @@ export default Vue.extend({
       this.working = false;
       this.title = `Testing ${this.row.function_name}...`;
 
-      if (!this.check_json_validity(this.test_req)) {
-        return this.response = 'invalid JSON';
-      }
-
       try {
-        const value = await test(this.row.function_name, JSON.parse(this.test_req));
-        this.response = value;
+        this.response = await test(this.row.function_name, JSON.parse(this.test_req));
         this.title = `Results`;
       } catch (error) {
         throw error;
