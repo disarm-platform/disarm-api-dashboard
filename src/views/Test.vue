@@ -1,6 +1,7 @@
 <template>
   <div>
     <h3>{{ title }}</h3>
+    <h3 v-if="run_time">{{run_time}}</h3>
     <h4 v-if="showFetchTestReqRes">{{ test_req_response }}</h4>
 
     <div v-if="!showResults || showFetchTestReqRes">
@@ -35,6 +36,7 @@ export default Vue.extend({
       working: true,
       test_req_response: '',
       title: '',
+      run_time: null as null | any,
     };
   },
   props: {
@@ -85,9 +87,12 @@ export default Vue.extend({
       }
 
       try {
+        const start = Date.now();
         const value = await test(this.row.function_name, JSON.parse(this.test_req));
+        const end = Date.now();
         this.response = value;
-        this.title = `Results`;
+        this.title = `Results of running ${this.row.function_name}`;
+        this.run_time = `Runtime : ${(end - start) / 1000} seconds `;
       } catch (error) {
         throw error;
       }
