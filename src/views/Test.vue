@@ -1,14 +1,20 @@
 <template>
   <div>
     <h3>{{ title }}</h3>
+    <h3 v-if="run_time">{{run_time}}</h3>
     <h4 v-if="showFetchTestReqRes">{{ test_req_response }}</h4>
 
     <div v-if="!showResults || showFetchTestReqRes">
-      
-      <textarea v-model="test_req" rows="20" @input="changed" placeholder="test_req.json" :disabled="!working"></textarea>
+      <textarea
+        v-model="test_req"
+        rows="20"
+        @input="changed"
+        placeholder="test_req.json"
+        :disabled="!working"
+      ></textarea>
       <footer v-if="working">
         <button class="dangerous" @click="$router.go(-1)">Cancel</button>
-        <button class="success"  :disabled="!request_valid" @click="test">Go!</button>
+        <button class="success" :disabled="!request_valid" @click="test">Go!</button>
         <span class="negative" v-if="!request_valid">input is not valid json</span>
       </footer>
     </div>
@@ -37,7 +43,8 @@ export default Vue.extend({
       working: true,
       test_req_response: '',
       title: '',
-      request_valid:false
+      request_valid: false,
+      run_time: null as null | any,
     };
   },
   props: {
@@ -51,13 +58,13 @@ export default Vue.extend({
         return true;
       }
     },
-    formattedResponse():string{
-      if(this.response === null){
+    formattedResponse(): string {
+      if (this.response === null) {
         return '';
-      };
-      try{
-        return JSON.stringify(JSON.parse(this.response), null, 2)
-      }catch{
+      }
+      try {
+        return JSON.stringify(JSON.parse(this.response), null, 2);
+      } catch {
         return this.response;
       }
     },
@@ -73,8 +80,8 @@ export default Vue.extend({
     this.try_get_test_json();
   },
   methods: {
-    changed(){
-     this.request_valid = this.check_json_validity(this.test_req);
+    changed() {
+      this.request_valid = this.check_json_validity(this.test_req);
     },
     async try_get_test_json() {
       this.title = `fetching test_req.json for ${this.row.function_name}`;
@@ -98,8 +105,12 @@ export default Vue.extend({
       this.title = `Testing ${this.row.function_name}...`;
 
       try {
-        this.response = await test(this.row.function_name, JSON.parse(this.test_req));
-        this.title = `Results`;
+        const start = Date.now();
+        const value = await test(this.row.function_name, JSON.parse(this.test_req));
+        const end = Date.now();
+        this.response = value;
+        this.title = `Results of running ${this.row.function_name}`;
+        this.run_time = `Runtime : ${(end - start) / 1000} seconds `;
       } catch (error) {
         throw error;
       }
