@@ -41,7 +41,7 @@ export async function get_params(row: OutgoingCombinedRecord): Promise<string> {
   }
 }
 
-export async function deploy(params: DeployParams): Promise<string> {
+export async function deploy(fn_name: string, params: DeployParams): Promise<string> {
   const auth_header = get_auth_header();
   if (!auth_header) {
     throw { name: 'MissingAuthError', message: 'No authorisation key' };
