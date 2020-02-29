@@ -101,6 +101,7 @@ export default Vue.extend({
       this.messages.push(`Sending request...`);
 
       try {
+        (this.$refs.tab2 as HTMLInputElement).click();
         const start = Date.now();
         const value = await test(this.row.function_name, JSON.parse(this.request));
         const end = Date.now();
@@ -108,7 +109,6 @@ export default Vue.extend({
         this.response = value;
         this.messages.push(`Results of running ${this.row.function_name}`);
         this.messages.push(`Runtime : ${(end - start) / 1000} seconds`);
-        (this.$refs.tab2 as HTMLInputElement).click();
       } catch (error) {
         throw error;
       }
