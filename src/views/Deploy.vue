@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h3>Testing: {{row.function_name}}</h3>
+    <h3>Deploying: {{row.function_name}}</h3>
 
     <Requester :row="row" :fn="deploy" :get_sample="get_params" />
   </div>
