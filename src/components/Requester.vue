@@ -13,7 +13,7 @@
       <div class="row">
         <!-- REQUEST -->
         <div>
-          <button @click="save('request')">Save request</button>
+          <button @click="save('request')" :disabled="!request">Save request</button>
           <button class="pseudo" @click="$router.go(-1)">Back to list</button>
           <button
             class="success"
@@ -32,7 +32,7 @@
 
         <!-- RESPONSE -->
         <div>
-          <button @click="save('response')">Save response</button>
+          <button @click="save('response')" :disabled="!response">Save response</button>
           <button class="pseudo" @click="$router.go(-1)">Back to list</button>
 
           <div v-if="response">
