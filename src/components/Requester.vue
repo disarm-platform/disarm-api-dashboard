@@ -100,7 +100,6 @@ export default Vue.extend({
       this.messages.push(`Fetching source file for ${this.row.function_name}`);
       try {
         const value = await this.get_sample(this.row);
-        console.log('value', value);
 
         if (this.check_json_validity(value)) {
           this.messages.push(`Successfully fetched from repo`);
@@ -125,7 +124,7 @@ export default Vue.extend({
       try {
         setTimeout(() => {
           (this.$refs.tab2 as HTMLInputElement).click();
-        }, 700);
+        }, 500);
         const start = Date.now();
         const value = await this.fn(this.row.function_name, JSON.parse(this.request));
         const end = Date.now();
