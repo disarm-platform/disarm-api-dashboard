@@ -14,7 +14,13 @@
         <!-- REQUEST -->
         <div>
           <button @click="save('request')">Save request</button>
-          <button @click="$router.go(-1)">Back to list</button>
+          <button class="pseudo" @click="$router.go(-1)">Back to list</button>
+          <button
+            class="success"
+            :disabled="!request_valid || sending_request"
+            @click="do_request"
+          >Send</button>
+          <span class="notify" v-if="!request_valid && request">Input is not valid JSON</span>
 
           <textarea
             v-model="request"
@@ -22,17 +28,12 @@
             @input="update_validity"
             :disabled="sending_request"
           ></textarea>
-
-          <footer v-if="!sending_request">
-            <button class="success" :disabled="!request_valid" @click="do_request">Go!</button>
-            <span class="notify" v-if="!request_valid && request">Input is not valid JSON</span>
-          </footer>
         </div>
 
         <!-- RESPONSE -->
         <div>
           <button @click="save('response')">Save response</button>
-          <button @click="$router.go(-1)">Back to list</button>
+          <button class="pseudo" @click="$router.go(-1)">Back to list</button>
 
           <div v-if="response">
             <pre>{{formattedResponse}}</pre>
@@ -85,6 +86,9 @@ export default Vue.extend({
       this.request_valid = this.check_json_validity(this.request);
     },
     check_json_validity(json: any): boolean {
+      if (typeof json === 'object') {
+        return true; // Already parsed as an object
+      }
       try {
         const obj = JSON.parse(json);
         return (obj && typeof obj === 'object' && obj !== null);
@@ -96,6 +100,8 @@ export default Vue.extend({
       this.messages.push(`Fetching source file for ${this.row.function_name}`);
       try {
         const value = await this.get_sample(this.row);
+        console.log('value', value);
+
         if (this.check_json_validity(value)) {
           this.messages.push(`Successfully fetched from repo`);
           this.request = JSON.stringify(JSON.parse(value), null, 2);
@@ -117,7 +123,9 @@ export default Vue.extend({
       this.messages.push(`Sending request...`);
 
       try {
-        (this.$refs.tab2 as HTMLInputElement).click();
+        setTimeout(() => {
+          (this.$refs.tab2 as HTMLInputElement).click();
+        }, 700);
         const start = Date.now();
         const value = await this.fn(this.row.function_name, JSON.parse(this.request));
         const end = Date.now();
@@ -125,6 +133,7 @@ export default Vue.extend({
         this.response = value;
         this.messages.push(`Results of running ${this.row.function_name}`);
         this.messages.push(`Runtime : ${(end - start) / 1000} seconds`);
+        this.$emit('refresh_list');
       } catch (error) {
         throw error;
       }
