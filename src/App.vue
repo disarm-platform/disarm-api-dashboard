@@ -2,7 +2,7 @@
   <div id="app">
     <div class="flex two nav">
       <div>
-        <span style="font-weight: 900;">DiSARM Dashboard</span>
+        <a style="font-weight: 900;" href="/">DiSARM Dashboard</a>
       </div>
       <div class="half" style="text-align: right;">
         <router-link to="logout" v-if="$route.name !== 'login'">Logout</router-link>

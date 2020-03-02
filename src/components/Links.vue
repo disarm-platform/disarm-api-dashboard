@@ -1,11 +1,11 @@
 <template>
   <div>
-    <a v-if="row.repo" :href="row.repo" target="_blank" v-bind:data-tooltip="row.repo">repo</a>
-    <span v-else class="disabled">repo</span>
+    <a v-if="row.repo" :href="row.repo" target="_blank" :data-tooltip="row.repo">repo</a>
+    <span v-else class="disabled" data-tooltip="! No repo found">repo</span>
     |
-    <a :href="log_url" target="_blank">logs</a>
+    <a :href="log_url" target="_blank" data-tooltip="Open logs in Google Cloud Console">logs</a>
     |
-    <a href='#' @click="copy_fn_url" data-tooltip='Copy to clipboard'>run URL</a>
+    <a href="#" @click="copy_fn_url" data-tooltip="Copy to clipboard">run URL</a>
   </div>
 </template>
 

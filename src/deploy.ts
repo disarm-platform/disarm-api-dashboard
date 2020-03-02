@@ -29,7 +29,7 @@ function make_base_params() {
   };
 }
 
-export async function get_params(row: OutgoingCombinedRecord) {
+export async function get_params(row: OutgoingCombinedRecord): Promise<string> {
   if (row.target_image_version) {
     return simple_params(row);
   } else if (row.repo) {
@@ -39,9 +39,9 @@ export async function get_params(row: OutgoingCombinedRecord) {
     console.error(error_message);
     throw new Error(error_message);
   }
-
 }
-export async function deploy(params: DeployParams): Promise<string> {
+
+export async function deploy(fn_name: string, params: DeployParams): Promise<string> {
   const auth_header = get_auth_header();
   if (!auth_header) {
     throw { name: 'MissingAuthError', message: 'No authorisation key' };
@@ -70,21 +70,22 @@ export async function deploy(params: DeployParams): Promise<string> {
   }
 }
 
-function simple_params(row: OutgoingCombinedRecord): DeployParams | undefined {
+function simple_params(row: OutgoingCombinedRecord): string {
   if (!row.target_image_version) {
-    return;
+    throw new Error('Missing target_image_version');
   }
 
   const base_params = make_base_params();
 
-  return {
+  const params = {
     ...base_params,
     service: row.function_name,
     image: row.target_image_version,
   };
+  return JSON.stringify(params);
 }
 
-async function repo_params(row: OutgoingCombinedRecord): Promise<DeployParams | undefined> {
+async function repo_params(row: OutgoingCombinedRecord): Promise<string> {
   const base_params = make_base_params();
   const stack_json = await get_stack_json(row);
 
@@ -107,8 +108,7 @@ async function repo_params(row: OutgoingCombinedRecord): Promise<DeployParams | 
     service: row.function_name,
     image: row.target_image_version || stack_json.image,
   };
-  console.log(deploy_params);
-  return deploy_params;
+  return JSON.stringify(deploy_params);
 }
 
 async function get_stack_json(row: OutgoingCombinedRecord): Promise<StackJSON | undefined> {
