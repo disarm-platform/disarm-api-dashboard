@@ -15,7 +15,7 @@
         </thead>
         <tbody>
           <tr v-for="row in api_data" :key="row.function_name">
-            <td>{{row.function_name}}</td>
+            <td :data-tooltip="row.deployed_image_version">{{row.function_name}}</td>
             <td>
               <Links :row="row" />
             </td>
