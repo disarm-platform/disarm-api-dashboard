@@ -5,11 +5,11 @@ import { isUndefined, uniq, get } from 'lodash';
 
 import { CONFIG } from './config';
 import {
-  IncomingAirtableRecord, IncomingOpenFaasRecord,
-  OutgoingAirtableSection, OutgoingCombinedRecord, OutgoingOpenfaasSection, OutgoingBasicRecord,
+  IncomingAlgoRecord, IncomingOpenFaasRecord,
+  OutgoingCombinedRecord, OutgoingOpenfaasSection, OutgoingBasicRecord,
 } from '../src/types';
 
-export default async function(req: express.Request, res: express.Response) {
+export default async function (req: express.Request, res: express.Response) {
   if (req.headers.authorization !== process.env.AUTHORIZATION) {
     res.writeHead(401);
     res.end('Unauthorised');
@@ -29,10 +29,10 @@ export default async function(req: express.Request, res: express.Response) {
 
 async function fetch_and_combine() {
   let openfaas_data: IncomingOpenFaasRecord[];
-  let airtable_data: IncomingAirtableRecord[];
+  let algos_data: IncomingAlgoRecord[];
 
   try {
-    airtable_data = await fetch_airtable();
+    algos_data = await fetch_github_algos();
     openfaas_data = await fetch_openfaas();
     // fs.writeFileSync('sample_responses/airtable_data.json', JSON.stringify(airtable_data));
     // fs.writeFileSync('sample_responses/openfaas_data.json', JSON.stringify(openfaas_data));
@@ -45,10 +45,10 @@ async function fetch_and_combine() {
     );
   }
 
-  return combine(airtable_data, openfaas_data);
+  return combine(algos_data, openfaas_data);
 }
 
-async function fetch_airtable(): Promise<IncomingAirtableRecord[]> {
+async function fetch_github_algos(): Promise<IncomingAlgoRecord[]> {
   const url = CONFIG.airtable_url;
   if (!url) {
     throw new Error('Missing AIRTABLE_URL env var');
@@ -87,7 +87,7 @@ async function fetch_openfaas(): Promise<IncomingOpenFaasRecord[]> {
 }
 
 function combine(
-  airtable_data: IncomingAirtableRecord[], openfaas_data: IncomingOpenFaasRecord[],
+  airtable_data: IncomingAlgoRecord[], openfaas_data: IncomingOpenFaasRecord[],
 ): OutgoingCombinedRecord[] {
   const function_names = all_unique_names(airtable_data, openfaas_data);
 
@@ -125,7 +125,7 @@ function combine(
   });
 }
 
-function all_unique_names(airtable_data: IncomingAirtableRecord[], openfaas_data: IncomingOpenFaasRecord[]) {
+function all_unique_names(airtable_data: IncomingAlgoRecord[], openfaas_data: IncomingOpenFaasRecord[]) {
   const all_names = airtable_data.map((airtable_record) => {
     return airtable_record.function_name;
   }).concat(openfaas_data.map((openfaas_record) => {
@@ -136,8 +136,8 @@ function all_unique_names(airtable_data: IncomingAirtableRecord[], openfaas_data
 }
 
 function find_airtable_record_by_name(
-  name: string, airtable_data: IncomingAirtableRecord[],
-): IncomingAirtableRecord | undefined {
+  name: string, airtable_data: IncomingAlgoRecord[],
+): IncomingAlgoRecord | undefined {
   return airtable_data.find((r) => r.function_name === name);
 }
 

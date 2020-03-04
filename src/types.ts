@@ -1,17 +1,17 @@
-export type OutgoingCombinedRecord = OutgoingBasicRecord & OutgoingAirtableSection & OutgoingOpenfaasSection;
+export type OutgoingCombinedRecord = OutgoingBasicRecord & OutgoingAlgoSection & OutgoingOpenfaasSection;
 
-export type ModalObj =  OutgoingCombinedRecord & Modal | null;
+export type ModalObj = OutgoingCombinedRecord & Modal | null;
 
 interface Modal {
   message: string;
 }
 export interface OutgoingBasicRecord {
   function_name: string;
-  missing_from_airtable: boolean;
+  missing_from_Algo: boolean;
   missing_from_openfaas: boolean;
 }
 
-export interface OutgoingAirtableSection {
+export interface OutgoingAlgoSection {
   repo?: string;
   target_image_version?: string;
 }
@@ -33,7 +33,7 @@ export enum CustomErrors {
 }
 
 // API
-export interface IncomingAirtableRecord {
+export interface IncomingAlgoRecord {
   function_name: string;
   image: string;
   repo: string;
