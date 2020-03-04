@@ -27,9 +27,9 @@ async function fetch_and_combine() {
   try {
     algos_data = await fetch_github_algos();
     openfaas_data = await fetch_openfaas();
-    const root = '/Users/jonathan/Dv-DiSARM/disarm-api-dashboard/sample_responses';
-    fs.writeFileSync(root + '/algos_data.json', JSON.stringify(algos_data));
-    fs.writeFileSync(root + '/openfaas_data.json', JSON.stringify(openfaas_data));
+    // const root = '/Users/jonathan/Dv-DiSARM/disarm-api-dashboard/sample_responses';
+    // fs.writeFileSync(root + '/algos_data.json', JSON.stringify(algos_data));
+    // fs.writeFileSync(root + '/openfaas_data.json', JSON.stringify(openfaas_data));
     // algos_data = JSON.parse(fs.readFileSync(root + '/algos_data.json', 'utf8'));
     // openfaas_data = JSON.parse(fs.readFileSync(root + '/openfaas_data.json', 'utf8'));
   } catch (e) {
