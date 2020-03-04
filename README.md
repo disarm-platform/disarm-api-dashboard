@@ -21,9 +21,9 @@ Stick in `.env.build` file
 
 ### For API
 Stick in a `.env`
+- `AUTHORISATION`: required, key used to authorise requests from the client to the API
 - `OPENFAAS_KEY`: required
-- `AIRTABLE_KEY`: required
-- `AIRTABLE_URL`: optional, defaults to https://api.airtable.com/v0/appUekRZWqLHK31zF/Algos
+- `ALGOS_URL`: optional, defaults to https://raw.githubusercontent.com/disarm-platform/algos/master/algos.json
 
 
 ## Combined UI and API deployment on Now/Zeit

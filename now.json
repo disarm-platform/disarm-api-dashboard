@@ -1,9 +1,8 @@
 {
   "env": {
     "OPENFAAS_KEY": "@openfaas_key",
-    "AIRTABLE_KEY": "@airtable_key",
-    "AIRTABLE_URL": "@airtable_url",
-    "AUTHORIZATION": "@authorization"
+    "AUTHORIZATION": "@authorization",
+    "ALGOS_URL": "@algos_url"
   },
   "build": {
     "env": {
