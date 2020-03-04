@@ -1,5 +1,4 @@
 import CONFIG from '@/lib/config';
-import store from '@/store';
 import { Login } from '@/types';
 import { make_auth_header, make_auth_string } from '@/lib/auth';
 
