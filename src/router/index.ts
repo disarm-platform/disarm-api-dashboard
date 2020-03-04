@@ -32,13 +32,6 @@ const routes = [
     path: '/list',
     name: 'list',
     component: List,
-    beforeEnter: (to: Route, from: Route, next: Next) => {
-      const auth_string = get_auth();
-      if (!auth_string) {
-        return next('/login');
-      }
-      next();
-    },
   },
   {
     path: '/deploy',
