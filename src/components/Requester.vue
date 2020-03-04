@@ -129,7 +129,7 @@ export default Vue.extend({
         const value = await this.fn(this.row.function_name, JSON.parse(this.request));
         const end = Date.now();
 
-        this.response = value;
+        this.response = value || 'Finished, no response body sent';
         this.messages.push(`Results of running ${this.row.function_name}`);
         this.messages.push(`Runtime : ${(end - start) / 1000} seconds`);
         this.$emit('refresh_list');
