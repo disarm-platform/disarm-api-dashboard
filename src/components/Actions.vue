@@ -1,12 +1,14 @@
 <template>
   <div>
     <button
+      v-if="auth_key"
       :disabled="!row.missing_from_openfaas"
       class="success"
       @click="deploy"
     >deploy</button>
 
     <button
+      v-if="auth_key"
       :disabled="row.missing_from_openfaas"
       class="warning"
       @click="undeploy"
@@ -14,21 +16,6 @@
     >undeploy</button>
 
     <button :disabled="row.missing_from_openfaas" @click="test">test</button>
-  <!-- <div>
-    <button
-      :disabled="!row.missing_from"
-      class="success"
-      @click="deploy"
-    >deploy</button>
-
-    <button
-      :disabled="!(c.deployed && row.hide_from_deploy)"
-      class="warning"
-      @click="undeploy"
-      data-tooltip="Requires 'hide_from_deploy' checked in Airtable"
-    >undeploy</button>
-
-    <button :disabled="!c.testable" @click="test">test</button> -->
   </div>
 </template>
 
@@ -41,6 +28,7 @@ import { undeploy } from '@/undeploy';
 import { EventBus } from '@/event_bus';
 import router from '@/router';
 import { OutgoingCombinedRecord } from '@/types';
+import { get_auth } from '@/auth';
 
 export default Vue.extend({
   props: {
@@ -48,15 +36,20 @@ export default Vue.extend({
       type: Object as () => OutgoingCombinedRecord,
     },
   },
+  data() {
+    return {
+      auth_key: get_auth(),
+    };
+  },
   methods: {
     deploy() {
-      router.push({ name: 'deploy', params: { row: this.row as any} });
+      router.push({ name: 'deploy', params: { row: this.row as any } });
     },
     async undeploy() {
-      router.push({ name: 'undeploy', params: { row: this.row as any} });
+      router.push({ name: 'undeploy', params: { row: this.row as any } });
     },
     test() {
-       router.push({ name: 'test', params: { row: this.row as any} });
+      router.push({ name: 'test', params: { row: this.row as any } });
     },
   },
 });
