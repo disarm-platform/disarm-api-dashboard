@@ -1,7 +1,6 @@
 <template>
   <div>
     <h3>Testing: {{row.function_name}}</h3>
-
     <Requester :row="row" :fn="test" :get_sample="get_test_req_json" />
   </div>
 </template>
