@@ -54,17 +54,16 @@ export async function deploy(fn_name: string, params: DeployParams): Promise<str
     'Accept': 'application/json, */*',
   };
   try {
-    const request = await fetch(url, {
+    const response = await fetch(url, {
       method: 'POST',
       redirect: 'follow',
       body: JSON.stringify(params),
       headers,
     });
-    const response = await request;
     if (typeof response.text !== 'function') {
       return `Encountered an ${response.statusText} trying to deploy ${params.service}}`;
     }
-    return request.text();
+    return response.text();
   } catch (error) {
     throw error;
   }

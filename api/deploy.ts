@@ -17,7 +17,7 @@ export default async function(req: express.Request, res: express.Response) {
     const url = `${CONFIG.openfaas_url}/system/functions`;
     const headers = { Authorization: CONFIG.openfaas_key };
     const data = req.body;
-    const fn_res = await axios.post(url, data, { headers });
+    await axios.post(url, data, { headers });
     return action_success(res, JSON.stringify({ deployed: true, ...req.body }));
   } catch (e) {
     console.log(e);

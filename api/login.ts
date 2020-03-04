@@ -6,7 +6,7 @@ export default async function(req: express.Request, res: express.Response) {
     res.end('Unauthorised');
     return;
   } else {
-    res.write(200);
+    res.writeHead(200);
     res.end();
     return;
   }

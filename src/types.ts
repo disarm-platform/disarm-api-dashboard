@@ -1,10 +1,10 @@
+export interface Login {
+  username: string;
+  password: string;
+}
+
 export type OutgoingCombinedRecord = OutgoingBasicRecord & OutgoingAlgoSection & OutgoingOpenfaasSection;
 
-export type ModalObj = OutgoingCombinedRecord & Modal | null;
-
-interface Modal {
-  message: string;
-}
 export interface OutgoingBasicRecord {
   function_name: string;
   missing_from_algos: boolean;

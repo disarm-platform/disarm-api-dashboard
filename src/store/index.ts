@@ -3,6 +3,7 @@ import Vuex from 'vuex';
 import { createDirectStore } from 'direct-vuex';
 
 import CONFIG from '../lib/config';
+import { make_auth_string, make_auth_header } from '@/lib/auth';
 
 Vue.use(Vuex);
 
@@ -31,8 +32,7 @@ const {
   } as RootState,
   mutations: {
     login(state, options: Login) {
-      const base64_string = btoa(`${options.username}:${options.password}`);
-      const auth_string = `Basic ${base64_string}`;
+      const auth_string = make_auth_string(options);
       localStorage.setItem(CONFIG.auth_key, auth_string);
       state.auth_key = auth_string;
     },
@@ -52,7 +52,7 @@ const {
       const { state, getters } = rootGetterContext(args as any);
       const auth_key = state.auth_key;
       if (getters.logged_in) {
-        return { Authorization: auth_key! };
+        return make_auth_header(auth_key!);
       } else {
         return null;
       }
