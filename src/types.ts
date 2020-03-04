@@ -7,7 +7,7 @@ interface Modal {
 }
 export interface OutgoingBasicRecord {
   function_name: string;
-  missing_from_Algo: boolean;
+  missing_from_algos: boolean;
   missing_from_openfaas: boolean;
 }
 
