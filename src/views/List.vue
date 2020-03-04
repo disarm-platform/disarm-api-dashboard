@@ -35,6 +35,10 @@
         </tbody>
       </table>
     </div>
+    <div v-else-if="errors">
+      ⚠️
+      {{errors}}
+    </div>
     <div v-else>Loading data...</div>
     <div class="explanation">
       <strong>Explanation</strong>
@@ -57,10 +61,10 @@ import State from '@/components/State.vue';
 import Stats from '@/components/Stats.vue';
 import Notes from '@/components/Notes.vue';
 import Links from '@/components/Links.vue';
-import { fetch_list } from '@/list';
+import { fetch_list } from '@/controllers/list';
 
 import { OutgoingCombinedRecord, BusActions, CustomErrors } from '@/types';
-import { EventBus } from '@/event_bus';
+import { EventBus } from '@/lib/event_bus';
 
 export default Vue.extend({
   name: 'list',
@@ -68,6 +72,7 @@ export default Vue.extend({
   data() {
     return {
       api_data: null as null | OutgoingCombinedRecord[],
+      errors: null as null | string,
     };
   },
   async created() {
@@ -86,7 +91,8 @@ export default Vue.extend({
         const value = await fetch_list();
         this.api_data = value;
       } catch (error) {
-        throw error;
+        this.errors = 'Trouble loading list';
+        console.error(error);
       } finally {
         EventBus.$emit(BusActions.loading_end);
       }

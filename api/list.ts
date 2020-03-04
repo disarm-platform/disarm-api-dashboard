@@ -9,7 +9,7 @@ import {
   OutgoingCombinedRecord, OutgoingOpenfaasSection, OutgoingBasicRecord, OutgoingAlgoSection,
 } from '../src/types';
 
-export default async function (req: express.Request, res: express.Response) {
+export default async function(req: express.Request, res: express.Response) {
   try {
     const data = await fetch_and_combine();
     res.writeHead(200, { 'Content-Type': 'application/json' });
@@ -27,9 +27,9 @@ async function fetch_and_combine() {
   try {
     algos_data = await fetch_github_algos();
     openfaas_data = await fetch_openfaas();
-    // const root = '~/Dv-DiSARM/disarm-api-dashboard/sample_responses';
-    // fs.writeFileSync(root + '/algos_data.json', JSON.stringify(algos_data));
-    // fs.writeFileSync(root + '/openfaas_data.json', JSON.stringify(openfaas_data));
+    const root = '/Users/jonathan/Dv-DiSARM/disarm-api-dashboard/sample_responses';
+    fs.writeFileSync(root + '/algos_data.json', JSON.stringify(algos_data));
+    fs.writeFileSync(root + '/openfaas_data.json', JSON.stringify(openfaas_data));
     // algos_data = JSON.parse(fs.readFileSync(root + '/algos_data.json', 'utf8'));
     // openfaas_data = JSON.parse(fs.readFileSync(root + '/openfaas_data.json', 'utf8'));
   } catch (e) {
@@ -80,7 +80,6 @@ function combine(
   algo_data: IncomingAlgoRecord[], openfaas_data: IncomingOpenFaasRecord[],
 ): OutgoingCombinedRecord[] {
   const function_names = all_unique_names(algo_data, openfaas_data);
-  console.log('function_names', function_names);
 
   return function_names.map((function_name) => {
     const algo_record = find_algo_record_by_name(function_name, algo_data);

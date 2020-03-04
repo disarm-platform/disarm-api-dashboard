@@ -16,12 +16,14 @@
     </article>
   </div>
 </template>
+
 <script lang="ts">
 import Vue from 'vue';
 import { OutgoingCombinedRecord, BusActions } from '@/types';
 import router from '@/router';
-import { undeploy } from '@/undeploy';
-import { EventBus } from '@/event_bus';
+import { undeploy } from '@/controllers/undeploy';
+import { EventBus } from '@/lib/event_bus';
+
 export default Vue.extend({
   name: 'undeploy',
   props: {

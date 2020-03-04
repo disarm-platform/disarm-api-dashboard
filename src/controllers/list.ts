@@ -1,12 +1,10 @@
-import CONFIG from '@/config';
-import { OutgoingCombinedRecord, CustomErrors } from './types';
-import { get_auth_header } from './auth';
+import CONFIG from '@/lib/config';
+import { OutgoingCombinedRecord, CustomErrors } from '../types';
 
 export async function fetch_list(): Promise<OutgoingCombinedRecord[]> {
   try {
     const url = `${CONFIG.api_url}/list`;
-    const headers = {};
-    const data = await fetch(url, { headers });
+    const data = await fetch(url);
     if (data.status === 200) {
       const json = await data.json();
       return json;

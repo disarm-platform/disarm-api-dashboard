@@ -1,14 +1,14 @@
 <template>
   <div>
     <button
-      v-if="auth_key"
+      v-if="logged_in"
       :disabled="!row.missing_from_openfaas"
       class="success"
       @click="deploy"
     >deploy</button>
 
     <button
-      v-if="auth_key"
+      v-if="logged_in"
       :disabled="row.missing_from_openfaas"
       class="warning"
       @click="undeploy"
@@ -22,13 +22,13 @@
 <script lang='ts'>
 import Vue from 'vue';
 
-import { deploy } from '@/deploy';
-import CONFIG from '@/config';
-import { undeploy } from '@/undeploy';
-import { EventBus } from '@/event_bus';
+import { deploy } from '@/controllers/deploy';
+import CONFIG from '@/lib/config';
+import { undeploy } from '@/controllers/undeploy';
+import { EventBus } from '@/lib/event_bus';
 import router from '@/router';
 import { OutgoingCombinedRecord } from '@/types';
-import { get_auth } from '@/auth';
+import store from '@/store';
 
 export default Vue.extend({
   props: {
@@ -36,10 +36,10 @@ export default Vue.extend({
       type: Object as () => OutgoingCombinedRecord,
     },
   },
-  data() {
-    return {
-      auth_key: get_auth(),
-    };
+  computed: {
+    logged_in() {
+      return store.getters.logged_in;
+    },
   },
   methods: {
     deploy() {

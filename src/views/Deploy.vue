@@ -8,10 +8,10 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { deploy, get_params } from '@/deploy';
-import { OutgoingCombinedRecord, BusActions } from '@/types';
 import Requester from '@/components/Requester.vue';
-import { EventBus } from '@/event_bus';
+import { deploy, get_params } from '@/controllers/deploy';
+import { OutgoingCombinedRecord, BusActions } from '@/types';
+import { EventBus } from '@/lib/event_bus';
 
 export default Vue.extend({
   components: { Requester },

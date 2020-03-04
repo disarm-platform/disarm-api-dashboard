@@ -1,9 +1,9 @@
 import YAML from 'yaml';
 import { cloneDeep } from 'lodash';
-import CONFIG from '@/config';
-import { OutgoingCombinedRecord, BusActions } from './types';
-import { EventBus } from './event_bus';
-import { get_auth_header } from './auth';
+import CONFIG from '@/lib/config';
+import { OutgoingCombinedRecord, BusActions } from '../types';
+import { EventBus } from '../lib/event_bus';
+import store from '../store';
 
 export interface DeployParams {
   service: string;
@@ -42,8 +42,8 @@ export async function get_params(row: OutgoingCombinedRecord): Promise<string> {
 }
 
 export async function deploy(fn_name: string, params: DeployParams): Promise<string> {
-  const auth_header = get_auth_header();
-  if (!auth_header) {
+  const auth_header = store.getters.auth_header;
+  if (auth_header === null) {
     throw { name: 'MissingAuthError', message: 'No authorisation key' };
   }
 

@@ -1,7 +1,7 @@
 <template>
   <div>
     <spinner v-if="loading" />
-    <span v-if="!deployed" class='subtle'>--</span>
+    <span v-if="!deployed" class="subtle">--</span>
     <span
       v-else
       :class="{subtle: row.deployed_invocation_count === 0}"
@@ -14,7 +14,7 @@ import Vue from 'vue';
 import { isNull } from 'lodash';
 import { OutgoingCombinedRecord, BusActions } from '@/types';
 import Spinner from '@/components/Spinner.vue';
-import { EventBus } from '@/event_bus';
+import { EventBus } from '@/lib/event_bus';
 
 export default Vue.extend({
   components: { Spinner },

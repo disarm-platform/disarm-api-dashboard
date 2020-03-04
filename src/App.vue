@@ -5,7 +5,8 @@
         <a style="font-weight: 900;" href="/">DiSARM Dashboard</a>
       </div>
       <div class="half" style="text-align: right;">
-        <router-link to="logout" v-if="$route.name !== 'login'">Logout</router-link>
+        <router-link to="logout" v-if="$store.getters.logged_in && $route.name !== 'login'">Logout</router-link>
+        <router-link to="login" v-if="!$store.getters.logged_in && $route.name !== 'login'">Login</router-link>
       </div>
     </div>
 

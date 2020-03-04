@@ -5,11 +5,11 @@
 
 <script lang='ts'>
 import Vue from 'vue';
-import { remove_auth } from '@/auth';
+import store from '@/store';
 
 export default Vue.extend({
   mounted() {
-    remove_auth();
+    store.commit.logout();
     this.$router.push('list');
   },
 });

@@ -13,7 +13,7 @@ import Vue from 'vue';
 import { isNull } from 'lodash';
 import { OutgoingCombinedRecord, BusActions } from '@/types';
 import Spinner from '@/components/Spinner.vue';
-import { EventBus } from '@/event_bus';
+import { EventBus } from '@/lib/event_bus';
 export default Vue.extend({
   components: { Spinner },
   props: {

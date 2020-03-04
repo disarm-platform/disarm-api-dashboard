@@ -6,7 +6,6 @@ import Undeploy from '@/views/Undeploy.vue';
 import Test from '@/views/Test.vue';
 import Vue from 'vue';
 import VueRouter, { Route, RawLocation } from 'vue-router';
-import { get_auth_header, get_auth } from '@/auth';
 
 Vue.use(VueRouter);
 

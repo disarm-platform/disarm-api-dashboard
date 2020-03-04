@@ -4,7 +4,7 @@
     <h1>Login</h1>
     <form @submit.prevent="submit">
       <input placeholder="Login" type="text" v-model="username" />
-      <input ref='password' placeholder="Password" type="password" v-model="password" />
+      <input ref="password" placeholder="Password" type="password" v-model="password" />
       <button type="submit">Login</button>
     </form>
   </div>
@@ -12,7 +12,7 @@
 
 <script lang='ts'>
 import Vue from 'vue';
-import { set_auth } from '../auth';
+import store from '@/store';
 
 export default Vue.extend({
   data() {
@@ -26,7 +26,7 @@ export default Vue.extend({
   },
   methods: {
     submit() {
-      set_auth(this.username, this.password);
+      store.commit.login({ username: this.username, password: this.password });
       this.$router.push('list');
     },
   },

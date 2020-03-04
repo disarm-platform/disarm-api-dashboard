@@ -7,7 +7,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { get_test_req_json, test } from '@/test';
+import { get_test_req_json, test } from '@/controllers/test';
 import { OutgoingCombinedRecord } from '@/types';
 import Requester from '@/components/Requester.vue';
 

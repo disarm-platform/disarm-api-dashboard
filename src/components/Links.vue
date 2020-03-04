@@ -3,7 +3,7 @@
     <a v-if="row.repo" :href="row.repo" target="_blank" :data-tooltip="row.repo">repo</a>
     <span v-else class="disabled" data-tooltip="! No repo found">repo</span>
     |
-    <span v-if="auth_key">
+    <span v-if="logged_in">
       <a :href="log_url" target="_blank" data-tooltip="Open logs in Google Cloud Console">logs</a>
       |
     </span>
@@ -14,22 +14,20 @@
 <script lang='ts'>
 import Vue from 'vue';
 import { OutgoingCombinedRecord } from '@/types';
-import { logs_url } from '@/logs_url';
-import { get_auth } from '@/auth';
+import { logs_url } from '@/lib/logs_url';
+import store from '@/store';
 export default Vue.extend({
   props: {
     row: {
       type: Object as () => OutgoingCombinedRecord,
     },
   },
-  data() {
-    return {
-      auth_key: get_auth(),
-    };
-  },
   computed: {
     log_url(): string {
       return logs_url(this.row.function_name);
+    },
+    logged_in() {
+      return store.getters.logged_in;
     },
   },
   methods: {

@@ -1,5 +1,5 @@
 import dotenv from 'dotenv';
-import ui_config from '../src/config';
+import ui_config from '../src/lib/config';
 
 if (process.env.NODE_ENV !== 'production') {
   dotenv.config();

@@ -1,7 +1,7 @@
-import { OutgoingCombinedRecord, BusActions } from './types';
+import { OutgoingCombinedRecord, BusActions } from '../types';
 import { extract_github_bits } from './deploy';
-import CONFIG from '@/config';
-import { EventBus } from './event_bus';
+import CONFIG from '@/lib/config';
+import { EventBus } from '../lib/event_bus';
 
 export async function get_test_req_json(row: OutgoingCombinedRecord): Promise<string> {
   if (!row.repo) {
