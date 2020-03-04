@@ -41,6 +41,16 @@
       <a href="/logout">Login</a>
     </div>
     <div v-else>Loading data...</div>
+    <div class="explanation">
+      <strong>Explanation</strong>
+      <p>
+        This page reads from two sources: the
+        <a
+          href="https://faas.srv.disarm.io"
+        >DiSARM OpenFaas deployment</a>, and the
+        <a href="https://github.com/disarm-platform/algos">Algorithms registry on GitHub</a>
+      </p>
+    </div>
   </div>
 </template>
 
@@ -98,5 +108,8 @@ export default Vue.extend({
 <style scoped>
 .disabled {
   color: grey;
+}
+.explanation {
+  margin-top: 30px;
 }
 </style>

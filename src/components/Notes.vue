@@ -1,6 +1,10 @@
 <template>
   <div>
-    <span v-if="row.missing_from_algos" class="alert">⚠️ Missing from GitHub algos</span>
+    <span
+      v-if="row.missing_from_algos"
+      class="alert"
+      data-tooltip="Missing from GitHub algo registry"
+    >⚠️</span>
   </div>
 </template>
 

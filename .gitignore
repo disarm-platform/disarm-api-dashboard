@@ -19,3 +19,4 @@ yarn-error.log*
 .now
 .env
 .env.build
+sample_responses
