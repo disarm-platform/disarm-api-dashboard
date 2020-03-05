@@ -22,6 +22,11 @@
           >Send</button>
           <span class="notify" v-if="!request_valid && request">Input is not valid JSON</span>
 
+          <hr />
+          <h5>Files</h5>
+          <LoadFile />
+
+          <hr />
           <textarea
             v-model="request"
             rows="20"
@@ -49,9 +54,12 @@
 <script lang="ts">
 import Vue from 'vue';
 import download from 'downloadjs';
+
+import LoadFile from '@/components/LoadFile.vue';
 import { OutgoingCombinedRecord } from '@/types';
 
 export default Vue.extend({
+  components: { LoadFile },
   data() {
     return {
       sending_request: false,
