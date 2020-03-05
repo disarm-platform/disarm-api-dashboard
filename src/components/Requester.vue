@@ -175,7 +175,7 @@ export default Vue.extend({
     },
     remove_placeholders(filemaps: FileMap[]) {
       console.log('need to remove', filemaps);
-    }
+    },
   },
 });
 </script>
