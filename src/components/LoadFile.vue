@@ -3,7 +3,7 @@
     <div v-if="errors">{{errors}}</div>
     <fieldset class="flex two" v-else>
       <label>
-        <input type="text" v-model="key" placeholder="Enter key" />
+        <input type="text" v-model="key" placeholder="Enter key - for example 'point_data'" />
       </label>
       <label>
         <input type="file" @change="file_from_input" />

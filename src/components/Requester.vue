@@ -12,6 +12,7 @@
 
       <div class="row">
         <!-- REQUEST -->
+
         <div>
           <button @click="save('request')" :disabled="!request">Save request</button>
           <button class="pseudo" @click="$router.go(-1)">Back to list</button>
@@ -20,19 +21,33 @@
             :disabled="!request_valid || sending_request"
             @click="do_request"
           >Send</button>
-          <span class="notify" v-if="!request_valid && request">Input is not valid JSON</span>
+          <div v-if="!sending_request">
+            <span class="notify" v-if="!request_valid && request">Input is not valid JSON</span>
 
-          <hr />
-          <h5>Files</h5>
-          <ManageFiles @add_placeholders="add_placeholders" />
+            <hr />
+            <h5>Files</h5>
+            <ManageFiles @add_placeholders="add_placeholders" />
 
-          <hr />
-          <textarea
-            v-model="request"
-            rows="20"
-            @input="update_validity"
-            :disabled="sending_request"
-          ></textarea>
+            <hr />
+
+            <!-- Manage keys -->
+            <div v-for="key in keys" :key="key">
+              <span class="tag" @click="remove_key(key)">{{key}} x</span>
+            </div>
+
+            <hr />
+
+            <textarea
+              v-model="request"
+              rows="20"
+              @input="update_validity"
+              :disabled="sending_request"
+            ></textarea>
+          </div>
+
+          <div v-else>
+            <pre>{{formatted_request}}</pre>
+          </div>
         </div>
 
         <!-- RESPONSE -->
@@ -75,6 +90,17 @@ export default Vue.extend({
     get_sample: Function,
   },
   computed: {
+    formatted_request(): string {
+      if (this.request === null) {
+        return '';
+      }
+      try {
+        return JSON.stringify(JSON.parse(this.request), null, 2);
+      } catch {
+        return this.request;
+      }
+
+    },
     formattedResponse(): string {
       if (this.response === null) {
         return '';
@@ -83,6 +109,16 @@ export default Vue.extend({
         return JSON.stringify(JSON.parse(this.response), null, 2);
       } catch {
         return this.response;
+      }
+    },
+    keys(): string[] {
+      if (this.request === null) {
+        return [];
+      }
+      try {
+        return Object.keys(JSON.parse(this.request));
+      } catch {
+        return [];
       }
     },
   },
@@ -173,8 +209,18 @@ export default Vue.extend({
       });
       this.request = JSON.stringify(request_json, null, 2);
     },
-    remove_placeholders(filemaps: FileMap[]) {
-      console.log('need to remove', filemaps);
+    remove_key(key: string) {
+      if (this.request === null) {
+        console.warn('trying to remove key from null request');
+        return;
+      }
+      try {
+        const parsed = JSON.parse(this.request);
+        delete parsed[key];
+        this.request = JSON.stringify(parsed, null, 2);
+      } catch (e) {
+        console.warn('Failed to remove key', key);
+      }
     },
   },
 });
@@ -190,5 +236,16 @@ export default Vue.extend({
 }
 .message:last-child {
   color: inherit;
+}
+.tag {
+  background: #ff9800;
+  font-size: 0.95em;
+  border-radius: 2px;
+  padding: 3px;
+  color: white;
+  cursor: pointer;
+}
+.tag:hover {
+  background: #bd8127;
 }
 </style>

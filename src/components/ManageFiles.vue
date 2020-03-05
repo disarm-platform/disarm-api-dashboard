@@ -1,8 +1,5 @@
 <template>
   <div>
-    <div v-for="(filemap, i) in filemaps" :key="i">
-      <span class="tag">{{filemap.key}}</span>
-    </div>
     <LoadFile v-if="show_add" @map_file="map_file" />
     <button @click="show_add = true" v-if="!show_add">Add</button>
   </div>
@@ -33,15 +30,4 @@ export default Vue.extend({
 </script>
 
 <style scoped>
-.tag {
-  background: #ff9800;
-  font-size: 0.95em;
-  border-radius: 2px;
-  padding: 3px;
-  color: white;
-  cursor: pointer;
-}
-.tag:hover {
-  background: #bd8127;
-}
 </style>
