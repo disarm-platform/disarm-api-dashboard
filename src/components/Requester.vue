@@ -31,8 +31,14 @@
             <hr />
 
             <!-- Manage keys -->
+            <h5>Keys</h5>
+
             <div v-for="key in keys" :key="key">
-              <span class="tag" @click="remove_key(key)">{{key}} x</span>
+              <span
+                data-tooltip="click to remove from JSON"
+                class="tag"
+                @click="remove_key(key)"
+              >{{key}} x</span>
             </div>
 
             <hr />
