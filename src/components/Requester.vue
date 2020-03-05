@@ -24,7 +24,7 @@
 
           <hr />
           <h5>Files</h5>
-          <LoadFile />
+          <ManageFiles @add_placeholders="add_placeholders" />
 
           <hr />
           <textarea
@@ -55,11 +55,11 @@
 import Vue from 'vue';
 import download from 'downloadjs';
 
-import LoadFile from '@/components/LoadFile.vue';
-import { OutgoingCombinedRecord } from '@/types';
+import ManageFiles from '@/components/ManageFiles.vue';
+import { OutgoingCombinedRecord, FileMap } from '@/types';
 
 export default Vue.extend({
-  components: { LoadFile },
+  components: { ManageFiles },
   data() {
     return {
       sending_request: false,
@@ -162,6 +162,20 @@ export default Vue.extend({
       const filename = `${type}.${timestamp}.json`;
       download(object, filename);
     },
+    add_placeholders(filemaps: FileMap[]) {
+      if (this.request === null) {
+        console.warn('Setting filemaps before request exists');
+        return;
+      }
+      const request_json = JSON.parse(this.request);
+      const keys = filemaps.forEach((fm) => {
+        request_json[fm.key] = fm.data;
+      });
+      this.request = JSON.stringify(request_json, null, 2);
+    },
+    remove_placeholders(filemaps: FileMap[]) {
+      console.log('need to remove', filemaps);
+    }
   },
 });
 </script>

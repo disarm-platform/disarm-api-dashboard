@@ -3,6 +3,11 @@ export interface Login {
   password: string;
 }
 
+export interface FileMap {
+  key: string;
+  data: any;
+}
+
 export type OutgoingCombinedRecord = OutgoingBasicRecord & OutgoingAlgoSection & OutgoingOpenfaasSection;
 
 export interface OutgoingBasicRecord {
