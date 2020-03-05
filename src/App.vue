@@ -6,7 +6,11 @@
       </div>
       <div class="half" style="text-align: right;">
         <router-link to="logout" v-if="$store.getters.logged_in && $route.name !== 'login'">Logout</router-link>
-        <router-link to="login" v-if="!$store.getters.logged_in && $route.name !== 'login'">Login</router-link>
+        <router-link
+          class="login-link"
+          to="login"
+          v-if="!$store.getters.logged_in && $route.name !== 'login'"
+        >Login</router-link>
       </div>
     </div>
 
@@ -48,5 +52,8 @@ body {
 .subtle {
   text-align: right;
   color: lightgray;
+}
+.login-link {
+  color: lightblue;
 }
 </style>
