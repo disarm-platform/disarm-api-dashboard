@@ -10,7 +10,7 @@
           class="login-link"
           to="login"
           v-if="!$store.getters.logged_in && $route.name !== 'login'"
-        >Login</router-link>
+        >Admin</router-link>
       </div>
     </div>
 

@@ -12,7 +12,6 @@
       :disabled="row.missing_from_openfaas"
       class="warning"
       @click="undeploy"
-      data-tooltip="Requires 'hide_from_deploy' checked in Airtable"
     >undeploy</button>
 
     <button :disabled="row.missing_from_openfaas" @click="test">test</button>
