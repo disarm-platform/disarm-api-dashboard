@@ -1,17 +1,16 @@
 <template>
   <div>
-    <button @click="save()" :disabled="!request">Save request</button>
+    <button @click="save()" :disabled="!request_string">Save request</button>
     <button class="success" :disabled="!valid_request || sending_request" @click="send_request">Send</button>
 
     <div v-if="!sending_request">
-      <span class="notify" v-if="!valid_request && request">Input is not valid JSON</span>
+      <span class="notify" v-if="!valid_request && request_string">Input is not valid JSON</span>
 
       <hr />
       <h5>Files</h5>
       <ManageFiles @add_placeholders="add_placeholders" />
 
       <hr />
-
       <!-- Manage keys -->
       <h5>Keys</h5>
 
@@ -25,7 +24,7 @@
 
       <hr />
 
-      <textarea v-model.lazy="request" rows="20" :disabled="sending_request"></textarea>
+      <textarea v-model.lazy="request_string" rows="20" :disabled="sending_request"></textarea>
     </div>
 
     <div v-else>
@@ -51,15 +50,14 @@ export default Vue.extend({
   },
   data() {
     return {
-      request: '{}' as string,
+      request_string: '{}' as string,
       sending_request: false,
     };
   },
   computed: {
     parsed_request(): undefined | AnyJson {
       try {
-        console.log('parsed_request');
-        return JSON.parse(this.request);
+        return JSON.parse(this.request_string);
       } catch (e) {
         return undefined;
       }
@@ -74,14 +72,14 @@ export default Vue.extend({
       return [];
     },
     formatted_request(): string {
-      if (this.request === null || !this.sending_request) {
+      if (this.request_string === null || !this.sending_request) {
         return '';
       }
       try {
         console.log('stringify');
         return JSON.stringify(this.parsed_request, null, 2);
       } catch {
-        return this.request;
+        return this.request_string;
       }
     },
   },
@@ -90,18 +88,19 @@ export default Vue.extend({
   },
   methods: {
     save() {
-      save_requester(this.request, 'request');
+      save_requester(this.request_string, 'request');
     },
     async try_get_sample() {
       this.$emit('post_message', `Fetching test_req file for ${this.row.function_name}`);
 
       try {
-        this.request = await this.get_sample(this.row);
-        if (!isUndefined(this.parsed_request)) {
+        const sample = await this.get_sample(this.row);
+        if (!isUndefined(sample)) {
+          this.request_string = sample;
           this.$emit('post_message', `Retrieved test_req file from repo`);
         } else {
           this.$emit('post_message', `File could not be found, check if repo exists`);
-          this.request = '{}';
+          this.request_string = '{}';
         }
       } catch (error) {
         this.$emit('post_message', `Error retrieving file`);
@@ -109,7 +108,7 @@ export default Vue.extend({
       }
     },
     async send_request() {
-      if (this.request === null) {
+      if (this.request_string === null) {
         return this.$emit('post_message', 'Missing request');
       }
 
@@ -119,13 +118,11 @@ export default Vue.extend({
       try {
         this.$emit('sending_request', this.sending_request);
         const start = Date.now();
-        console.log('parse');
-        const value = await this.fn(this.row.function_name, this.parsed_request);
+        const value = await this.fn(this.row, this.parsed_request);
         const end = Date.now();
 
         this.$emit('response', value || 'Finished, no response body sent');
-        this.$emit('post_message', `Results of running ${this.row.function_name}`);
-        this.$emit('post_message', `Runtime : ${(end - start) / 1000} seconds`);
+        this.$emit('post_message', `Results of running ${this.row.function_name} (${(end - start) / 1000} seconds)`);
         this.$emit('refresh_list');
       } catch (error) {
         throw error;
@@ -133,7 +130,7 @@ export default Vue.extend({
     },
 
     add_placeholders(filemaps: FileMap[]) {
-      // if (this.request === null) {
+      // if (this.request_string === null) {
       //   console.warn('Setting filemaps before request exists');
       //   return;
       // }
@@ -142,20 +139,19 @@ export default Vue.extend({
       //   request_json[fm.key] = fm.data;
       // });
       // console.log('stringify');
-      // this.request = JSON.stringify(request_json, null, 2);
+      // this.request_string = JSON.stringify(request_json, null, 2);
     },
     remove_key(key: string) {
       const parsed = cloneDeep(this.parsed_request);
-      if (parsed === null ||
-        typeof parsed === 'undefined') {
-        console.warn('trying to remove key from null request');
+      if (parsed === null || typeof parsed === 'undefined') {
+        console.warn('Trying to remove key from empty/undefined request');
         return;
       }
 
       try {
         delete (parsed as JsonMap)[key];
         console.log('stringify');
-        this.request = JSON.stringify(parsed, null, 2);
+        this.request_string = JSON.stringify(parsed, null, 2);
       } catch (e) {
         console.warn('Failed to remove key', key);
       }

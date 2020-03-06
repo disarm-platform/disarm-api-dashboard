@@ -1,17 +1,8 @@
 import YAML from 'yaml';
 import { cloneDeep } from 'lodash';
 import CONFIG from '@/lib/config';
-import { OutgoingCombinedRecord, BusActions } from '../types';
-import { EventBus } from '../lib/event_bus';
+import { OutgoingCombinedRecord, FnGetSample, DeployParams, FnDoRequest } from '../types';
 import store from '../store';
-
-export interface DeployParams {
-  service: string;
-  image: string;
-  envVars: any;
-  labels: any;
-  secrets: string[];
-}
 
 interface StackJSON {
   image: string;
@@ -29,7 +20,7 @@ function make_base_params() {
   };
 }
 
-export async function get_params(row: OutgoingCombinedRecord): Promise<string> {
+export const get_params: FnGetSample = async (row) => {
   if (row.target_image_version) {
     return simple_params(row);
   } else if (row.repo) {
@@ -37,11 +28,11 @@ export async function get_params(row: OutgoingCombinedRecord): Promise<string> {
   } else {
     const error_message = `Trying to deploy without a repo or an image: ${JSON.stringify(row)}`;
     console.error(error_message);
-    throw new Error(error_message);
+    return;
   }
-}
+};
 
-export async function deploy(fn_name: string, params: DeployParams): Promise<string> {
+export const deploy: FnDoRequest = async (_, params) => {
   const auth_header = store.getters.auth_header;
   if (auth_header === null) {
     throw { name: 'MissingAuthError', message: 'No authorisation key' };
@@ -67,7 +58,7 @@ export async function deploy(fn_name: string, params: DeployParams): Promise<str
   } catch (error) {
     throw error;
   }
-}
+};
 
 function simple_params(row: OutgoingCombinedRecord): string {
   if (!row.target_image_version) {

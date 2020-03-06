@@ -3,6 +3,22 @@ export type AnyJson = boolean | number | string | null | JsonArray | JsonMap;
 export interface JsonMap { [key: string]: AnyJson; }
 interface JsonArray extends Array<AnyJson> { }
 
+export interface FnGetSample {
+  (row: OutgoingCombinedRecord): Promise<undefined | string>;
+}
+
+export interface FnDoRequest {
+  (row: OutgoingCombinedRecord, params: DeployParams): Promise<string>;
+}
+
+export interface DeployParams {
+  service: string;
+  image: string;
+  envVars: any;
+  labels: any;
+  secrets: string[];
+}
+
 export interface Login {
   username: string;
   password: string;

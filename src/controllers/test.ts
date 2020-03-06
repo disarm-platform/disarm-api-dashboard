@@ -1,11 +1,10 @@
-import { OutgoingCombinedRecord, BusActions } from '../types';
+import { FnGetSample, FnDoRequest } from '../types';
 import { extract_github_bits } from './deploy';
 import CONFIG from '@/lib/config';
-import { EventBus } from '../lib/event_bus';
 
-export async function get_test_req_json(row: OutgoingCombinedRecord): Promise<string> {
+export const get_test_req_json: FnGetSample = async (row) => {
   if (!row.repo) {
-    return `test_req.json not found, place test data here `;
+    return;
   }
   try {
     const { org, repo } = extract_github_bits(row.repo!);
@@ -15,12 +14,12 @@ export async function get_test_req_json(row: OutgoingCombinedRecord): Promise<st
     return body;
   } catch (error) {
     console.error(error);
-    return error;
+    return;
   }
-}
+};
 
-export async function test(fn_name: string, test_req: any): Promise<string> {
-  const url = `${CONFIG.cors_proxy}/${CONFIG.openfaas_url}/function/${fn_name}`;
+export const test: FnDoRequest = async (row, options) => {
+  const url = `${CONFIG.cors_proxy}/${CONFIG.openfaas_url}/function/${row.function_name}`;
   const headers = {
     'Content-Type': 'application/json',
     'Accept': 'application/json, */*',
@@ -30,16 +29,16 @@ export async function test(fn_name: string, test_req: any): Promise<string> {
     const request = await fetch(url, {
       method: 'POST',
       redirect: 'follow',
-      body: JSON.stringify(test_req),
+      body: JSON.stringify(options),
       headers,
     });
     const response = await request;
     if (response.status !== 200) {
-      return `Function ${fn_name} returned ${response.status} error.`;
+      return `Function ${row.function_name} returned ${response.status} error.`;
     }
 
     return request.text();
   } catch (error) {
     throw error;
   }
-}
+};

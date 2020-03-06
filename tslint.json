@@ -15,7 +15,8 @@
         "object-literal-sort-keys": false,
         "ordered-imports": false,
         "interface-name": false,
-        "variable-name": false
+        "variable-name": false,
+        "callable-types": false
     },
     "rulesDirectory": []
 }

@@ -1,19 +1,17 @@
 <template>
   <div>
-    <article class="card">
-      <div v-if="!showResults">
-        <h3>Are you sure you want to undeploy function {{ row.function_name }}?</h3>
-        <footer v-if="working">
-          <button class="dangerous" @click="goBack">Cancel</button>
-          <button class="warning" @click="undeploy">Go!</button>
-        </footer>
-      </div>
-      <div v-if="showResults">
-        <h3>Results</h3>
-        <div>{{ response }}</div>
-        <button @click="goBack">Go Back</button>
-      </div>
-    </article>
+    <div v-if="!showResults">
+      <h3>Are you sure you want to undeploy function {{ row.function_name }}?</h3>
+      <footer v-if="working">
+        <button class="dangerous" @click="goBack">Cancel</button>
+        <button class="warning" @click="undeploy">Go!</button>
+      </footer>
+    </div>
+    <div v-if="showResults">
+      <h3>Results</h3>
+      <div>{{ response }}</div>
+      <button @click="goBack">Go Back</button>
+    </div>
   </div>
 </template>
 
