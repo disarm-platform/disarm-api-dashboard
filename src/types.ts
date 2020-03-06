@@ -1,3 +1,11 @@
+export type Json =
+  | null
+  | boolean
+  | number
+  | string
+  | Json[]
+  | { [prop: string]: Json };
+
 export interface Login {
   username: string;
   password: string;
