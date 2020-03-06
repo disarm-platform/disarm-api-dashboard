@@ -1,7 +1,7 @@
 <template>
   <div>
     <LoadFile v-if="show_add" @map_file="map_file" />
-    <button @click="show_add = true" v-if="!show_add">Add</button>
+    <button @click="show_add = true" v-if="!show_add" class="pseudo">+ Add from file</button>
   </div>
 </template>
 
@@ -15,14 +15,12 @@ export default Vue.extend({
   components: { LoadFile },
   data() {
     return {
-      filemaps: [] as FileMap[],
-      show_add: true,
+      show_add: false,
     };
   },
   methods: {
     map_file(filemap: FileMap) {
-      this.filemaps.push(filemap);
-      this.$emit('add_placeholders', this.filemaps);
+      this.$emit('add_filemap', filemap);
       this.show_add = false;
     },
   },

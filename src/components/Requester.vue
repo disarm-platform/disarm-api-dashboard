@@ -3,7 +3,7 @@
     <ul>
       <li v-for="(message, i) in messages" :key="i" class="message">{{message}}</li>
     </ul>
-    <button class="pseudo" @click="$router.go(-1)">Back to list</button>
+    <button class="pseudo" @click="$router.go(-1)">< Back to list</button>
 
     <div class="tabs two">
       <input ref="request_tab" id="request_tab" type="radio" name="tabgroupB" checked />

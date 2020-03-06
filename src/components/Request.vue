@@ -5,26 +5,26 @@
 
     <div v-if="!sending_request">
       <span class="notify" v-if="!valid_request && request_string">Input is not valid JSON</span>
+      <div class="flex four">
+        <div class="fourth">
+          <h4>Keys</h4>
+          <em v-if="!keys.length">No keys</em>
+          <div v-for="key in keys" :key="key">
+            <span
+              data-tooltip="click to remove from JSON"
+              class="tag"
+              @click="remove_key(key)"
+            >{{key}} x</span>
+          </div>
 
-      <hr />
-      <h5>Files</h5>
-      <ManageFiles @add_placeholders="add_placeholders" />
+          <ManageFiles @add_filemap="add_filemap" />
+        </div>
 
-      <hr />
-      <!-- Manage keys -->
-      <h5>Keys</h5>
-
-      <div v-for="key in keys" :key="key">
-        <span
-          data-tooltip="click to remove from JSON"
-          class="tag"
-          @click="remove_key(key)"
-        >{{key}} x</span>
+        <div class="three-fourth">
+          <textarea v-model.lazy="request_string" rows="20" :disabled="sending_request"></textarea>
+          <button @click="format" class="pseudo">~ Format</button>
+        </div>
       </div>
-
-      <hr />
-
-      <textarea v-model.lazy="request_string" rows="20" :disabled="sending_request"></textarea>
     </div>
 
     <div v-else>
@@ -72,7 +72,7 @@ export default Vue.extend({
       return [];
     },
     formatted_request(): string {
-      if (this.request_string === null || !this.sending_request) {
+      if (this.request_string === null) {
         return '';
       }
       try {
@@ -90,6 +90,10 @@ export default Vue.extend({
     save() {
       save_requester(this.request_string, 'request');
     },
+    format() {
+      const new_requst = this.formatted_request;
+      this.request_string = this.formatted_request;
+    },
     async try_get_sample() {
       this.$emit('post_message', `Fetching test_req file for ${this.row.function_name}`);
 
@@ -97,6 +101,7 @@ export default Vue.extend({
         const sample = await this.get_sample(this.row);
         if (!isUndefined(sample)) {
           this.request_string = sample;
+          this.request_string = this.formatted_request;
           this.$emit('post_message', `Retrieved test_req file from repo`);
         } else {
           this.$emit('post_message', `File could not be found, check if repo exists`);
@@ -128,18 +133,11 @@ export default Vue.extend({
         throw error;
       }
     },
-
-    add_placeholders(filemaps: FileMap[]) {
-      // if (this.request_string === null) {
-      //   console.warn('Setting filemaps before request exists');
-      //   return;
-      // }
-      // const request_json = this.parsed_request;
-      // const keys = filemaps.forEach((fm) => {
-      //   request_json[fm.key] = fm.data;
-      // });
-      // console.log('stringify');
-      // this.request_string = JSON.stringify(request_json, null, 2);
+    add_filemap(filemap: FileMap) {
+      const stringed = JSON.stringify({ [filemap.key]: filemap.data });
+      const parsed = cloneDeep(this.parsed_request);
+      (parsed as JsonMap)[filemap.key] = filemap.data;
+      this.request_string = JSON.stringify(parsed, null, 2);
     },
     remove_key(key: string) {
       const parsed = cloneDeep(this.parsed_request);

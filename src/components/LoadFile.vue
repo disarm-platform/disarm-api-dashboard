@@ -2,9 +2,9 @@
   <div>
     <div v-if="errors">{{errors}}</div>
 
-    <fieldset class="flex two" v-else>
+    <fieldset v-else>
       <label>
-        <input type="text" v-model="key" placeholder="Enter key - for example 'point_data'" />
+        <input type="text" v-model="key" placeholder="Property name e.g. 'point_data'" />
       </label>
       <label>
         <input type="file" @change="file_from_input" />
