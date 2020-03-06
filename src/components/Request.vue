@@ -9,7 +9,7 @@
         <div class="fourth">
           <h4>Keys</h4>
           <em v-if="!keys.length">No keys</em>
-          <div v-for="key in keys" :key="key">
+          <div v-for="key in keys" :key="key" class="tags">
             <span
               data-tooltip="click to remove from JSON"
               class="tag"
@@ -163,7 +163,9 @@ export default Vue.extend({
   color: red;
   margin-left: 10px;
 }
-
+.tags {
+  margin: 4px;
+}
 .tag {
   background: #ff9800;
   font-size: 0.95em;
