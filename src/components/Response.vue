@@ -1,6 +1,5 @@
 <template>
   <div>
-    <button class="pseudo" @click="$router.go(-1)">Back to list</button>
     <button @click="save()" :disabled="!response">Save response</button>
 
     <div v-if="response">

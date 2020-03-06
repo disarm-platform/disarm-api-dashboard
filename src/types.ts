@@ -1,10 +1,7 @@
-export type Json =
-  | null
-  | boolean
-  | number
-  | string
-  | Json[]
-  | { [prop: string]: Json };
+// From https://github.com/microsoft/TypeScript/issues/1897#issuecomment-338650717
+export type AnyJson = boolean | number | string | null | JsonArray | JsonMap;
+interface JsonMap { [key: string]: AnyJson; }
+interface JsonArray extends Array<AnyJson> { }
 
 export interface Login {
   username: string;

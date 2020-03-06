@@ -3,6 +3,7 @@
     <ul>
       <li v-for="(message, i) in messages" :key="i" class="message">{{message}}</li>
     </ul>
+    <button class="pseudo" @click="$router.go(-1)">Back to list</button>
 
     <div class="tabs two">
       <input ref="request_tab" id="request_tab" type="radio" name="tabgroupB" checked />
@@ -63,7 +64,7 @@ export default Vue.extend({
       if (this.sending_request === true) {
         setTimeout(() => {
           (this.$refs.response_tab as HTMLInputElement).click();
-        }, 500);
+        }, 800);
       }
     },
     set_response(response: string) {

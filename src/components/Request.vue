@@ -1,6 +1,5 @@
 <template>
   <div>
-    <button class="pseudo" @click="$router.go(-1)">Back to list</button>
     <button @click="save()" :disabled="!request">Save request</button>
     <button class="success" :disabled="!valid_request || sending_request" @click="send_request">Send</button>
 
@@ -40,7 +39,7 @@ import Vue from 'vue';
 
 import ManageFiles from '@/components/ManageFiles.vue';
 import { save_requester } from '@/lib/save_requester';
-import { OutgoingCombinedRecord, FileMap, Json } from '@/types';
+import { OutgoingCombinedRecord, FileMap, AnyJson } from '@/types';
 import { isUndefined } from 'lodash';
 
 export default Vue.extend({
@@ -57,10 +56,7 @@ export default Vue.extend({
     };
   },
   computed: {
-    parsed_request(): undefined | Json {
-      if (this.request === null) {
-        return null;
-      }
+    parsed_request(): undefined | AnyJson {
       try {
         console.log('parsed_request');
         return JSON.parse(this.request);
@@ -72,10 +68,10 @@ export default Vue.extend({
       return !isUndefined(this.parsed_request);
     },
     keys(): string[] {
-      if (this.valid_request && this.parsed_request !== null) {
-        return [];
+      if (typeof this.parsed_request === 'object' && this.parsed_request !== null) {
+        return Object.keys(this.parsed_request);
       }
-      return Object.keys(this.parsed_request);
+      return [];
     },
     formatted_request(): string {
       if (this.request === null || !this.sending_request) {
@@ -101,13 +97,14 @@ export default Vue.extend({
 
       try {
         this.request = await this.get_sample(this.row);
-        if (this.valid_request) {
+        if (!isUndefined(this.parsed_request)) {
           this.$emit('post_message', `Retrieved test_req file from repo`);
         } else {
           this.$emit('post_message', `File could not be found, check if repo exists`);
           this.request = '{}';
         }
       } catch (error) {
+        this.$emit('post_message', `Error retrieving file`);
         throw error;
       }
     },
@@ -136,30 +133,30 @@ export default Vue.extend({
     },
 
     add_placeholders(filemaps: FileMap[]) {
-      if (this.request === null) {
-        console.warn('Setting filemaps before request exists');
-        return;
-      }
-      const request_json = this.parsed_request;
-      const keys = filemaps.forEach((fm) => {
-        request_json[fm.key] = fm.data;
-      });
-      console.log('stringify');
-      this.request = JSON.stringify(request_json, null, 2);
+      // if (this.request === null) {
+      //   console.warn('Setting filemaps before request exists');
+      //   return;
+      // }
+      // const request_json = this.parsed_request;
+      // const keys = filemaps.forEach((fm) => {
+      //   request_json[fm.key] = fm.data;
+      // });
+      // console.log('stringify');
+      // this.request = JSON.stringify(request_json, null, 2);
     },
     remove_key(key: string) {
-      if (this.request === null) {
-        console.warn('trying to remove key from null request');
-        return;
-      }
-      try {
-        const parsed = this.parsed_request;
-        delete parsed[key];
-        console.log('stringify');
-        this.request = JSON.stringify(parsed, null, 2);
-      } catch (e) {
-        console.warn('Failed to remove key', key);
-      }
+      // if (this.request === null) {
+      //   console.warn('trying to remove key from null request');
+      //   return;
+      // }
+      // try {
+      //   const parsed = this.parsed_request;
+      //   delete parsed[key];
+      //   console.log('stringify');
+      //   this.request = JSON.stringify(parsed, null, 2);
+      // } catch (e) {
+      //   console.warn('Failed to remove key', key);
+      // }
     },
   },
 });
