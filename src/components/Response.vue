@@ -1,7 +1,7 @@
 <template>
   <div>
     <button @click="save()" :disabled="!response">Save response</button>
-
+    <hr />
     <div v-if="response">
       <pre>{{formatted_response}}</pre>
     </div>

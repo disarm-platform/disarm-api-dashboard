@@ -2,27 +2,44 @@
   <div>
     <button @click="save()" :disabled="!request_string">Save request</button>
     <button class="success" :disabled="!valid_request || sending_request" @click="send_request">Send</button>
-
+    <hr />
     <div v-if="!sending_request">
       <span class="notify" v-if="!valid_request && request_string">Input is not valid JSON</span>
       <div class="flex four">
         <div class="fourth">
-          <h4>Keys</h4>
-          <em v-if="!keys.length">No keys</em>
-          <div v-for="key in keys" :key="key" class="tags">
-            <span
-              data-tooltip="click to remove from JSON"
-              class="tag"
-              @click="remove_key(key)"
-            >{{key}} x</span>
+          <div>
+            <strong>Keys</strong>
           </div>
+          <div>
+            <em v-if="!keys.length">No keys</em>
+          </div>
+          <ul class="tags">
+            <li
+              v-for="key in keys"
+              :key="key"
+              class="tag"
+              data-tooltip="click to remove from JSON"
+              @click="remove_key(key)"
+            >{{key}}</li>
+          </ul>
 
           <ManageFiles @add_filemap="add_filemap" />
         </div>
 
         <div class="three-fourth">
-          <textarea v-model.lazy="request_string" rows="20" :disabled="sending_request"></textarea>
-          <button @click="format" class="pseudo">~ Format</button>
+          <div v-if="show_string">
+            <textarea
+              v-model.lazy="request_string"
+              rows="20"
+              :disabled="sending_request"
+              class="request"
+            ></textarea>
+            <button @click="show_string = false" class="pseudo">Hide preview</button>
+            <button @click="format" class="pseudo">~ Format preview</button>
+          </div>
+          <div v-else>
+            <button @click="show_string = true" class="pseudo">Show preview</button>
+          </div>
         </div>
       </div>
     </div>
@@ -50,6 +67,7 @@ export default Vue.extend({
   },
   data() {
     return {
+      show_string: false,
       request_string: '{}' as string,
       sending_request: false,
     };
@@ -159,22 +177,28 @@ export default Vue.extend({
 </script>
 
 <style scoped>
+.request {
+  font-family: monospace;
+}
 .notify {
   color: red;
   margin-left: 10px;
 }
 .tags {
-  margin: 4px;
+  margin: 0px;
 }
 .tag {
-  background: #ff9800;
-  font-size: 0.95em;
+  margin: 4px;
+  font-family: monospace;
+  /* font-size: 0.95em; */
   border-radius: 2px;
   padding: 3px;
-  color: white;
+  /* color: white; */
   cursor: pointer;
 }
 .tag:hover {
-  background: #bd8127;
+  background: #ff4a4a;
+  /* background: #ff9800; */
+  /* background: #bd8127; */
 }
 </style>
