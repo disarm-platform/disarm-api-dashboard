@@ -5,68 +5,28 @@
     </ul>
 
     <div class="tabs two">
-      <input ref="tab1" id="tab-1" type="radio" name="tabgroupB" checked />
-      <label class="pseudo button toggle" for="tab-1">Request</label>
-      <input ref="tab2" id="tab-2" type="radio" name="tabgroupB" />
-      <label class="pseudo button toggle" for="tab-2">Response</label>
+      <input ref="request_tab" id="request_tab" type="radio" name="tabgroupB" checked />
+      <label class="pseudo button toggle" for="request_tab">Request</label>
+      <input ref="response_tab" id="response_tab" type="radio" name="tabgroupB" />
+      <label class="pseudo button toggle" for="response_tab">Response</label>
 
       <div class="row">
         <!-- REQUEST -->
-
-        <div>
-          <button @click="save('request')" :disabled="!request">Save request</button>
-          <button class="pseudo" @click="$router.go(-1)">Back to list</button>
-          <button
-            class="success"
-            :disabled="!request_valid || sending_request"
-            @click="do_request"
-          >Send</button>
-          <div v-if="!sending_request">
-            <span class="notify" v-if="!request_valid && request">Input is not valid JSON</span>
-
-            <hr />
-            <h5>Files</h5>
-            <ManageFiles @add_placeholders="add_placeholders" />
-
-            <hr />
-
-            <!-- Manage keys -->
-            <h5>Keys</h5>
-
-            <div v-for="key in keys" :key="key">
-              <span
-                data-tooltip="click to remove from JSON"
-                class="tag"
-                @click="remove_key(key)"
-              >{{key}} x</span>
-            </div>
-
-            <hr />
-
-            <textarea
-              v-model="request"
-              rows="20"
-              @input="update_validity"
-              :disabled="sending_request"
-            ></textarea>
-          </div>
-
-          <div v-else>
-            <pre>{{formatted_request}}</pre>
-          </div>
-        </div>
+        <Request
+          :row="row"
+          :fn="fn"
+          :get_sample="get_sample"
+          @post_message="post_message"
+          @sending_request="update_sending_request"
+          @response="set_response"
+        />
 
         <!-- RESPONSE -->
-        <div>
-          <button @click="save('response')" :disabled="!response">Save response</button>
-          <button class="pseudo" @click="$router.go(-1)">Back to list</button>
-
-          <div v-if="response">
-            <pre>{{formattedResponse}}</pre>
-          </div>
-          <div v-else-if="!sending_request">Waiting for request to be sent.</div>
-          <div v-else>Waiting for request to complete...</div>
-        </div>
+        <Response
+          :response="response"
+          :sending_request="sending_request"
+          @post_message="post_message"
+        />
       </div>
     </div>
   </div>
@@ -76,182 +36,48 @@
 import Vue from 'vue';
 import download from 'downloadjs';
 
-import ManageFiles from '@/components/ManageFiles.vue';
+import Request from '@/components/Request.vue';
+import Response from '@/components/Response.vue';
 import { OutgoingCombinedRecord, FileMap } from '@/types';
 
 export default Vue.extend({
-  components: { ManageFiles },
-  data() {
-    return {
-      sending_request: false,
-      request: null as null | string,
-      request_valid: false,
-      response: null as null | string,
-      messages: [] as string[],
-    };
-  },
+  components: { Request, Response },
   props: {
     row: Object as () => OutgoingCombinedRecord,
     fn: Function,
     get_sample: Function,
   },
-  computed: {
-    formatted_request(): string {
-      if (this.request === null) {
-        return '';
-      }
-      try {
-        return JSON.stringify(JSON.parse(this.request), null, 2);
-      } catch {
-        return this.request;
-      }
-
-    },
-    formattedResponse(): string {
-      if (this.response === null) {
-        return '';
-      }
-      try {
-        return JSON.stringify(JSON.parse(this.response), null, 2);
-      } catch {
-        return this.response;
-      }
-    },
-    keys(): string[] {
-      if (this.request === null) {
-        return [];
-      }
-      try {
-        return Object.keys(JSON.parse(this.request));
-      } catch {
-        return [];
-      }
-    },
-  },
-  mounted() {
-    this.try_get_sample();
+  data() {
+    return {
+      sending_request: false,
+      response: null as null | string,
+      messages: [] as string[],
+    };
   },
   methods: {
-    update_validity() {
-      this.request_valid = this.check_json_validity(this.request);
+    post_message(message: string) {
+      this.messages.push(message);
     },
-    check_json_validity(json: any): boolean {
-      if (typeof json === 'object') {
-        return true; // Already parsed as an object
-      }
-      try {
-        const obj = JSON.parse(json);
-        return (obj && typeof obj === 'object' && obj !== null);
-      } catch (err) {
-        return false;
-      }
-    },
-    async try_get_sample() {
-      this.messages.push(`Fetching source file for ${this.row.function_name}`);
-      try {
-        const value = await this.get_sample(this.row);
-
-        if (this.check_json_validity(value)) {
-          this.messages.push(`Successfully fetched from repo`);
-          this.request = JSON.stringify(JSON.parse(value), null, 2);
-        } else {
-          this.messages.push(`File could not be found, check if repo exists`);
-          this.request = JSON.stringify({});
-        }
-        this.update_validity();
-      } catch (error) {
-        throw error;
-      }
-    },
-    async do_request() {
-      if (this.request === null) {
-        return this.messages.push('Missing request');
-      }
-
-      this.sending_request = true;
-      this.messages.push(`Sending request...`);
-
-      try {
+    update_sending_request(sending_request: boolean) {
+      this.sending_request = sending_request;
+      if (this.sending_request === true) {
         setTimeout(() => {
-          (this.$refs.tab2 as HTMLInputElement).click();
+          (this.$refs.response_tab as HTMLInputElement).click();
         }, 500);
-        const start = Date.now();
-        const value = await this.fn(this.row.function_name, JSON.parse(this.request));
-        const end = Date.now();
-
-        this.response = value || 'Finished, no response body sent';
-        this.messages.push(`Results of running ${this.row.function_name}`);
-        this.messages.push(`Runtime : ${(end - start) / 1000} seconds`);
-        this.$emit('refresh_list');
-      } catch (error) {
-        throw error;
       }
     },
-    save(type: 'request' | 'response') {
-      let object: any;
-      const timestamp = new Date().toISOString().slice(0, 10) + '-' +
-        new Date().toLocaleTimeString().replace(/:/g, '-');
-
-      if (type === 'request' && this.request) {
-        object = this.request;
-      } else if (type === 'response' && this.response) {
-        object = this.response;
-      } else {
-        console.error(`Save command for ${type} failed`);
-        return;
-      }
-
-      const filename = `${type}.${timestamp}.json`;
-      download(object, filename);
-    },
-    add_placeholders(filemaps: FileMap[]) {
-      if (this.request === null) {
-        console.warn('Setting filemaps before request exists');
-        return;
-      }
-      const request_json = JSON.parse(this.request);
-      const keys = filemaps.forEach((fm) => {
-        request_json[fm.key] = fm.data;
-      });
-      this.request = JSON.stringify(request_json, null, 2);
-    },
-    remove_key(key: string) {
-      if (this.request === null) {
-        console.warn('trying to remove key from null request');
-        return;
-      }
-      try {
-        const parsed = JSON.parse(this.request);
-        delete parsed[key];
-        this.request = JSON.stringify(parsed, null, 2);
-      } catch (e) {
-        console.warn('Failed to remove key', key);
-      }
+    set_response(response: string) {
+      this.response = response;
     },
   },
 });
 </script>
 
 <style lang="css" scoped>
-.notify {
-  color: red;
-  margin-left: 10px;
-}
 .message {
   color: grey;
 }
 .message:last-child {
   color: inherit;
-}
-.tag {
-  background: #ff9800;
-  font-size: 0.95em;
-  border-radius: 2px;
-  padding: 3px;
-  color: white;
-  cursor: pointer;
-}
-.tag:hover {
-  background: #bd8127;
 }
 </style>

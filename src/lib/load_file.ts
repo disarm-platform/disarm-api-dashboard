@@ -15,7 +15,7 @@ export async function load_data(file: File): Promise<ParseResult> {
   }
 
   try {
-    return Object.freeze(await parse_raw_data(file.name, file_content));
+    return await parse_raw_data(file.name, file_content);
   } catch (e) {
     return {
       message: 'Could not load data from file',

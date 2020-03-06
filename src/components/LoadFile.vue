@@ -1,6 +1,7 @@
 <template>
   <div>
     <div v-if="errors">{{errors}}</div>
+
     <fieldset class="flex two" v-else>
       <label>
         <input type="text" v-model="key" placeholder="Enter key - for example 'point_data'" />
@@ -8,8 +9,8 @@
       <label>
         <input type="file" @change="file_from_input" />
       </label>
-      <button class="success" @click="save" :disabled="!key || !data">Save</button>
     </fieldset>
+    <button class="success" @click="save" :disabled="!key || !data">Add file</button>
   </div>
 </template>
 
@@ -36,7 +37,7 @@ export default Vue.extend({
 
       const { data, message } = await load_data(file);
       if (data) {
-        this.data = data;
+        this.data = Object.freeze(data);
       } else if (message) {
         this.errors = message;
       } else {
