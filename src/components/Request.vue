@@ -39,8 +39,8 @@ import Vue from 'vue';
 
 import ManageFiles from '@/components/ManageFiles.vue';
 import { save_requester } from '@/lib/save_requester';
-import { OutgoingCombinedRecord, FileMap, AnyJson } from '@/types';
-import { isUndefined } from 'lodash';
+import { OutgoingCombinedRecord, FileMap, AnyJson, JsonMap } from '@/types';
+import { isUndefined, cloneDeep } from 'lodash';
 
 export default Vue.extend({
   components: { ManageFiles },
@@ -145,18 +145,20 @@ export default Vue.extend({
       // this.request = JSON.stringify(request_json, null, 2);
     },
     remove_key(key: string) {
-      // if (this.request === null) {
-      //   console.warn('trying to remove key from null request');
-      //   return;
-      // }
-      // try {
-      //   const parsed = this.parsed_request;
-      //   delete parsed[key];
-      //   console.log('stringify');
-      //   this.request = JSON.stringify(parsed, null, 2);
-      // } catch (e) {
-      //   console.warn('Failed to remove key', key);
-      // }
+      const parsed = cloneDeep(this.parsed_request);
+      if (parsed === null ||
+        typeof parsed === 'undefined') {
+        console.warn('trying to remove key from null request');
+        return;
+      }
+
+      try {
+        delete (parsed as JsonMap)[key];
+        console.log('stringify');
+        this.request = JSON.stringify(parsed, null, 2);
+      } catch (e) {
+        console.warn('Failed to remove key', key);
+      }
     },
   },
 });

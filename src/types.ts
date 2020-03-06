@@ -1,6 +1,6 @@
 // From https://github.com/microsoft/TypeScript/issues/1897#issuecomment-338650717
 export type AnyJson = boolean | number | string | null | JsonArray | JsonMap;
-interface JsonMap { [key: string]: AnyJson; }
+export interface JsonMap { [key: string]: AnyJson; }
 interface JsonArray extends Array<AnyJson> { }
 
 export interface Login {
