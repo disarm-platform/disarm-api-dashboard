@@ -34,11 +34,11 @@
               :disabled="sending_request"
               class="request"
             ></textarea>
-            <button @click="show_string = false" class="pseudo">Hide preview</button>
-            <button @click="format" class="pseudo">~ Format preview</button>
+            <button @click="show_string = false" class="pseudo">Hide request</button>
+            <button @click="format" class="pseudo">~ Format request</button>
           </div>
           <div v-else>
-            <button @click="show_string = true" class="pseudo">Show preview</button>
+            <button @click="show_string = true" class="pseudo">Show request</button>
           </div>
         </div>
       </div>
@@ -67,7 +67,7 @@ export default Vue.extend({
   },
   data() {
     return {
-      show_string: false,
+      show_string: true,
       request_string: '{}' as string,
       sending_request: false,
     };
