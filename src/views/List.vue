@@ -35,11 +35,15 @@
         </tbody>
       </table>
     </div>
+    
     <div v-else-if="errors">
       ⚠️
       {{errors}}
     </div>
     <div v-else>Loading data...</div>
+    <div>
+      <router-link to="/generic-runner">Generic runner</router-link>
+    </div>
     <div class="explanation">
       <strong>Explanation</strong>
       <p>
@@ -89,6 +93,7 @@ export default Vue.extend({
       try {
         EventBus.$emit(BusActions.loading_start);
         const value = await fetch_list();
+
         this.api_data = value;
       } catch (error) {
         this.errors = 'Trouble loading list';

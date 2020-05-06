@@ -1,0 +1,197 @@
+<template>
+  <div>
+    <h1>Generic function runner</h1>
+    <ul>
+      <li v-for="(message, i) in messages" :key="i" class="message">{{message}}</li>
+    </ul>
+    <input type="text" placeholder="enter url here eg 'https://faas.srv.disarm.io/function/fn-covariate-extractor'" v-model="url" />
+    <div class="tabs two">
+      <input ref="request_tab" id="request_tab" type="radio" name="tabgroupB" checked />
+      <label class="pseudo button toggle" for="request_tab">Request</label>
+      <input ref="response_tab" id="response_tab" type="radio" name="tabgroupB" />
+      <label class="pseudo button toggle" for="response_tab">Response</label>
+
+      <div class="row">
+        <!-- REQUEST -->
+        <div>
+          <button @click="save()" :disabled="!request_string">Save request</button>
+          <button
+            class="success"
+            :disabled="!valid_request || sending_request"
+            @click="send_request"
+          >Send</button>
+          <hr />
+          <div v-if="!sending_request">
+            <span class="notify" v-if="!valid_request && request_string">Input is not valid JSON</span>
+            <div class="flex four">
+              <div class="three-fourth">
+                <div v-if="show_string">
+                  <textarea
+                    v-model.lazy="request_string"
+                    rows="20"
+                    :disabled="sending_request"
+                    class="request"
+                  ></textarea>
+                  <button @click="show_string = false" class="pseudo">Hide request</button>
+                  <button @click="format" class="pseudo">~ Format request</button>
+                </div>
+                <div v-else>
+                  <button @click="show_string = true" class="pseudo">Show request</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div v-else>
+            <pre>{{formatted_request()}}</pre>
+          </div>
+        </div>
+
+        <!-- RESPONSE -->
+        <Response
+          :response="response"
+          :sending_request="sending_request"
+          @post_message="post_message"
+        />
+      </div>
+    </div>
+  </div>
+</template>
+
+
+<script lang="ts">
+import Vue from 'vue';
+import Response from '@/components/Response.vue';
+import Request from '@/components/Response.vue';
+import ManageFiles from '@/components/Response.vue';
+import { generic_runner } from '@/controllers/test.ts';
+import { save_requester } from '@/lib/save_requester';
+import { isUndefined, cloneDeep } from 'lodash';
+import { AnyJson, JsonMap, FileMap } from '@/types';
+
+export default Vue.extend({
+  components: { Response, Request, ManageFiles },
+  name: 'GenericRunner',
+  data() {
+    return {
+      sending_request: false,
+      response: null as null | string,
+      messages: [] as string[],
+      row: {},
+      request_string: '{}' as string,
+      show_string: true,
+      url: null as null | string,
+    };
+  },
+  methods: {
+
+    add_filemap(filemap: FileMap) {
+      const stringed = JSON.stringify({ [filemap.key]: filemap.data });
+      const parsed = cloneDeep(this.parsed_request());
+      (parsed as JsonMap)[filemap.key] = filemap.data;
+      this.request_string = JSON.stringify(parsed, null, 2);
+    },
+
+    keys(): string[] {
+      if (
+        typeof this.parsed_request === 'object' &&
+        this.parsed_request !== null
+      ) {
+        return Object.keys(this.parsed_request);
+      }
+      return [];
+    },
+    formatted_request(): string {
+      if (this.request_string === null) {
+        return '';
+      }
+      try {
+        console.log('stringify');
+        return JSON.stringify(this.parsed_request(), null, 2);
+      } catch {
+        return this.request_string;
+      }
+    },
+    format() {
+      const new_requst = this.formatted_request;
+      this.request_string = this.formatted_request();
+    },
+
+    async send_request() {
+      if (this.request_string === null) {
+        return this.$emit('post_message', 'Missing request');
+      }
+
+      this.sending_request = true;
+      this.$emit('post_message', `Sending request...`);
+
+      try {
+
+        this.$emit('sending_request', this.sending_request);
+        const start = Date.now();
+        const value = await generic_runner(
+          this.url || '',
+          this.parsed_request(),
+        );
+        const end = Date.now();
+
+        this.set_response(value);
+        this.$emit('response', value || 'Finished, no response body sent');
+
+        this.$emit(
+          'post_message',
+          `Results of running ${this.url} (${(end - start) / 1000} seconds)`,
+        );
+        this.post_message(`Results of running ${this.url} (${(end - start) / 1000} seconds)`);
+        this.$emit('refresh_list');
+      } catch (error) {
+        throw error;
+      }
+    },
+    parsed_request(): undefined | AnyJson {
+      try {
+        return JSON.parse(this.request_string);
+      } catch (e) {
+        return undefined;
+      }
+    },
+    remove_key(key: string) {
+      const parsed = cloneDeep(this.parsed_request());
+      if (parsed === null || typeof parsed === 'undefined') {
+        console.warn('Trying to remove key from empty/undefined request');
+        return;
+      }
+
+      try {
+        delete (parsed as JsonMap)[key];
+        console.log('stringify');
+        this.request_string = JSON.stringify(parsed, null, 2);
+      } catch (e) {
+        console.warn('Failed to remove key', key);
+      }
+    },
+
+    valid_request(): boolean {
+      return !isUndefined(this.parsed_request());
+    },
+    save() {
+      save_requester(this.request_string, 'request');
+    },
+    post_message(message: string) {
+      console.log('HHere');
+      this.messages.push(message);
+    },
+    update_sending_request(sending_request: boolean) {
+      this.sending_request = sending_request;
+      if (this.sending_request === true) {
+        setTimeout(() => {
+          (this.$refs.response_tab as HTMLInputElement).click();
+        }, 800);
+      }
+    },
+    set_response(response: string) {
+      this.response = response;
+    },
+  },
+});
+</script>

@@ -84,7 +84,10 @@ export default Vue.extend({
       return !isUndefined(this.parsed_request);
     },
     keys(): string[] {
-      if (typeof this.parsed_request === 'object' && this.parsed_request !== null) {
+      if (
+        typeof this.parsed_request === 'object' &&
+        this.parsed_request !== null
+      ) {
         return Object.keys(this.parsed_request);
       }
       return [];
@@ -113,7 +116,10 @@ export default Vue.extend({
       this.request_string = this.formatted_request;
     },
     async try_get_sample() {
-      this.$emit('post_message', `Fetching test_req file for ${this.row.function_name}`);
+      this.$emit(
+        'post_message',
+        `Fetching test_req file for ${this.row.function_name}`,
+      );
 
       try {
         const sample = await this.get_sample(this.row);
@@ -122,7 +128,10 @@ export default Vue.extend({
           this.request_string = this.formatted_request;
           this.$emit('post_message', `Retrieved test_req file from repo`);
         } else {
-          this.$emit('post_message', `File could not be found, check if repo exists`);
+          this.$emit(
+            'post_message',
+            `File could not be found, check if repo exists`,
+          );
           this.request_string = '{}';
         }
       } catch (error) {
@@ -145,7 +154,11 @@ export default Vue.extend({
         const end = Date.now();
 
         this.$emit('response', value || 'Finished, no response body sent');
-        this.$emit('post_message', `Results of running ${this.row.function_name} (${(end - start) / 1000} seconds)`);
+        this.$emit(
+          'post_message',
+          `Results of running ${this.row.function_name} (${(end - start) /
+            1000} seconds)`,
+        );
         this.$emit('refresh_list');
       } catch (error) {
         throw error;

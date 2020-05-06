@@ -1,4 +1,4 @@
-import { FnGetSample, FnDoRequest } from '../types';
+import { FnGetSample, FnDoRequest, DeployParams } from '../types';
 import { extract_github_bits } from './deploy';
 import CONFIG from '@/lib/config';
 
@@ -35,6 +35,32 @@ export const test: FnDoRequest = async (row, options) => {
     const response = await request;
     if (response.status !== 200) {
       return `Function ${row.function_name} returned ${response.status} error.`;
+    }
+
+    return request.text();
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const generic_runner = async (url: string, options: any) => {
+  const out_going_url: string  = `${CONFIG.cors_proxy}/${url}`;
+
+  const headers = {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json, */*',
+  };
+
+  try {
+    const request = await fetch(out_going_url, {
+      method: 'POST',
+      redirect: 'follow',
+      body: JSON.stringify(options),
+      headers,
+    });
+    const response = await request;
+    if (response.status !== 200) {
+      return `Request to url ${url} returned ${response.status} error.`;
     }
 
     return request.text();

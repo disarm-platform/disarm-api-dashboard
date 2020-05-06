@@ -4,6 +4,7 @@ import List from '@/views/List.vue';
 import Deploy from '@/views/Deploy.vue';
 import Undeploy from '@/views/Undeploy.vue';
 import Test from '@/views/Test.vue';
+import GenericRunner from '@/views/GenericRunner.vue';
 import Vue from 'vue';
 import VueRouter, { Route, RawLocation } from 'vue-router';
 
@@ -67,6 +68,11 @@ const routes = [
       }
       next();
     },
+  },
+  {
+    path: '/generic-runner',
+    name: 'generic-runner',
+    component: GenericRunner,
   },
 ];
 
