@@ -42,7 +42,7 @@
     </div>
     <div v-else>Loading data...</div>
     <div>
-      <router-link to="/generic-runner">Generic runner</router-link>
+      <router-link to="/generic-runner" class="button">Generic runner</router-link>
     </div>
     <div class="explanation">
       <strong>Explanation</strong>
