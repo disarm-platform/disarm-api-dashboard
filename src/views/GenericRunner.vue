@@ -2,27 +2,50 @@
   <div>
     <h1>Generic function runner</h1>
     <ul>
-      <li v-for="(message, i) in messages" :key="i" class="message">{{message}}</li>
+      <li v-for="(message, i) in messages" :key="i" class="message">
+        {{ message }}
+      </li>
     </ul>
-    <input type="text" placeholder="enter url here eg 'https://faas.srv.disarm.io/function/fn-covariate-extractor'" v-model="url" />
+    <input
+      type="text"
+      placeholder="enter url here eg 'https://faas.srv.disarm.io/function/fn-covariate-extractor'"
+      v-model="url"
+    />
     <div class="tabs two">
-      <input ref="request_tab" id="request_tab" type="radio" name="tabgroupB" checked />
+      <input
+        ref="request_tab"
+        id="request_tab"
+        type="radio"
+        name="tabgroupB"
+        checked
+      />
       <label class="pseudo button toggle" for="request_tab">Request</label>
-      <input ref="response_tab" id="response_tab" type="radio" name="tabgroupB" />
+      <input
+        ref="response_tab"
+        id="response_tab"
+        type="radio"
+        name="tabgroupB"
+      />
       <label class="pseudo button toggle" for="response_tab">Response</label>
 
       <div class="row">
         <!-- REQUEST -->
         <div>
-          <button @click="save()" :disabled="!request_string">Save request</button>
+          <button @click="save()" :disabled="!request_string">
+            Save request
+          </button>
           <button
             class="success"
             :disabled="!valid_request || sending_request"
             @click="send_request"
-          >Send</button>
+          >
+            Send
+          </button>
           <hr />
           <div v-if="!sending_request">
-            <span class="notify" v-if="!valid_request && request_string">Input is not valid JSON</span>
+            <span class="notify" v-if="!valid_request && request_string"
+              >Input is not valid JSON</span
+            >
             <div class="flex four">
               <div class="three-fourth">
                 <div v-if="show_string">
@@ -32,18 +55,24 @@
                     :disabled="sending_request"
                     class="request"
                   ></textarea>
-                  <button @click="show_string = false" class="pseudo">Hide request</button>
-                  <button @click="format" class="pseudo">~ Format request</button>
+                  <button @click="show_string = false" class="pseudo">
+                    Hide request
+                  </button>
+                  <button @click="format" class="pseudo">
+                    ~ Format request
+                  </button>
                 </div>
                 <div v-else>
-                  <button @click="show_string = true" class="pseudo">Show request</button>
+                  <button @click="show_string = true" class="pseudo">
+                    Show request
+                  </button>
                 </div>
               </div>
             </div>
           </div>
 
           <div v-else>
-            <pre>{{formatted_request()}}</pre>
+            <pre>{{ formatted_request() }}</pre>
           </div>
         </div>
 
@@ -57,7 +86,6 @@
     </div>
   </div>
 </template>
-
 
 <script lang="ts">
 import Vue from 'vue';
@@ -84,7 +112,6 @@ export default Vue.extend({
     };
   },
   methods: {
-
     add_filemap(filemap: FileMap) {
       const stringed = JSON.stringify({ [filemap.key]: filemap.data });
       const parsed = cloneDeep(this.parsed_request());
@@ -116,17 +143,33 @@ export default Vue.extend({
       const new_requst = this.formatted_request;
       this.request_string = this.formatted_request();
     },
-
+    isUrl(url: string) {
+      const regexp = /(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/;
+      return regexp.test(url);
+    },
     async send_request() {
+      if (this.url === null) {
+        this.post_message('Missing request url');
+        return this.$emit('post_message', 'Missing request url');
+      }
+
+      if (!this.isUrl(this.url)) {
+        this.post_message('Invalid url');
+        return this.$emit('post_message', 'Invalid url');
+      }
+
       if (this.request_string === null) {
+        this.post_message('Missing request');
         return this.$emit('post_message', 'Missing request');
       }
 
       this.sending_request = true;
+
+      this.update_sending_request(this.sending_request);
+
       this.$emit('post_message', `Sending request...`);
-
+      this.post_message(`Sending request...`);
       try {
-
         this.$emit('sending_request', this.sending_request);
         const start = Date.now();
         const value = await generic_runner(
@@ -142,7 +185,9 @@ export default Vue.extend({
           'post_message',
           `Results of running ${this.url} (${(end - start) / 1000} seconds)`,
         );
-        this.post_message(`Results of running ${this.url} (${(end - start) / 1000} seconds)`);
+        this.post_message(
+          `Results of running ${this.url} (${(end - start) / 1000} seconds)`,
+        );
         this.$emit('refresh_list');
       } catch (error) {
         throw error;
@@ -178,7 +223,6 @@ export default Vue.extend({
       save_requester(this.request_string, 'request');
     },
     post_message(message: string) {
-      console.log('HHere');
       this.messages.push(message);
     },
     update_sending_request(sending_request: boolean) {
@@ -195,3 +239,35 @@ export default Vue.extend({
   },
 });
 </script>
+
+<style scoped>
+.request {
+  font-family: monospace;
+}
+.notify {
+  color: red;
+  margin-left: 10px;
+}
+.tags {
+  margin: 0px;
+}
+.tag {
+  margin: 4px;
+  font-family: monospace;
+
+  border-radius: 2px;
+  padding: 3px;
+
+  cursor: pointer;
+}
+.tag:hover {
+  background: #ff4a4a;
+}
+
+.message {
+  color: grey;
+}
+.message:last-child {
+  color: inherit;
+}
+</style>
