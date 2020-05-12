@@ -19,14 +19,14 @@
         name="tabgroupB"
         checked
       />
-      <label class="pseudo button toggle" for="request_tab">Request</label>
+      <label class="pseudo button toggle tabs" for="request_tab">Request</label>
       <input
         ref="response_tab"
         id="response_tab"
         type="radio"
         name="tabgroupB"
       />
-      <label class="pseudo button toggle" for="response_tab">Response</label>
+      <label class="pseudo button toggle tabs" for="response_tab">Response</label>
 
       <div class="row">
         <!-- REQUEST -->
@@ -270,4 +270,9 @@ export default Vue.extend({
 .message:last-child {
   color: inherit;
 }
+
+label.tabs{
+  width:50%;
+}
+
 </style>
