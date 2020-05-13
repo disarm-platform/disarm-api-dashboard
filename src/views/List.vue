@@ -41,8 +41,8 @@
       {{errors}}
     </div>
     <div v-else>Loading data...</div>
-    <div>
-      <router-link to="/generic-runner" class="button">Generic runner</router-link>
+    <div class="generic_link">
+      <span>If you want to test a  function not listed here try the <router-link to="/generic-runner">generic function tester</router-link></span>
     </div>
     <div class="explanation">
       <strong>Explanation</strong>
@@ -112,5 +112,9 @@ export default Vue.extend({
 }
 .explanation {
   margin-top: 30px;
+}
+
+.generic_link{
+  margin-top: 20px;
 }
 </style>
