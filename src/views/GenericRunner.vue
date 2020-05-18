@@ -1,6 +1,58 @@
 <template>
   <div>
     <h1>Generic function runner</h1>
+
+    <button v-if="!example_box" @click="change_example_box" class="success">
+      See example
+    </button>
+    <button v-else-if="example_box" @click="change_example_box" class="error">
+      Close example
+    </button>
+
+    <div v-if="example_box" class="example_box">
+      <h3>Example</h3>
+
+      <div>
+        <div>
+          <span>url:</span>
+        </div>
+        <div>
+          <pre>https://faas.srv.disarm.io/function/fn-covariate-extractor</pre>
+        </div>
+      </div>
+      <div>
+        <span>params</span>
+        <br />
+        <div>
+          <pre>
+              {
+              "layer_names": [
+                "elev_m",
+                "dist_to_water_m",
+                "dist_to_road_m",
+                "bioclim1"
+              ],
+              "points": {
+                "type": "FeatureCollection",
+                "features": [
+                  {
+                    "type": "Feature",
+                    "properties": {},
+                    "geometry": {
+                      "type": "Point",
+                      "coordinates": [
+                        31.1737060546875,
+                        -26.645003827815252
+                      ]
+                    }
+                  }
+                ]
+              }
+              }
+          </pre>
+        </div>
+      </div>
+    </div>
     <ul>
       <li v-for="(message, i) in messages" :key="i" class="message">
         {{ message }}
@@ -26,7 +78,9 @@
         type="radio"
         name="tabgroupB"
       />
-      <label class="pseudo button toggle tabs" for="response_tab">Response</label>
+      <label class="pseudo button toggle tabs" for="response_tab"
+        >Response</label
+      >
 
       <div class="row">
         <!-- REQUEST -->
@@ -109,9 +163,13 @@ export default Vue.extend({
       request_string: '{}' as string,
       show_string: true,
       url: null as null | string,
+      example_box: true,
     };
   },
   methods: {
+    change_example_box() {
+      this.example_box = !this.example_box;
+    },
     add_filemap(filemap: FileMap) {
       const stringed = JSON.stringify({ [filemap.key]: filemap.data });
       const parsed = cloneDeep(this.parsed_request());
@@ -271,8 +329,13 @@ export default Vue.extend({
   color: inherit;
 }
 
-label.tabs{
-  width:50%;
+label.tabs {
+  width: 50%;
 }
 
+.example_box {
+  border: solid 0.2px;
+  padding: 20px;
+  border-color: #e0dada;
+}
 </style>
