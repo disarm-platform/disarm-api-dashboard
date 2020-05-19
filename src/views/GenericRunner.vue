@@ -1,8 +1,17 @@
 <template>
   <div>
     <h1>Generic function runner</h1>
-
-    <button v-if="!example_box" @click="change_example_box" class="see_example__btn">
+    <p>
+      This tool helps you test any algorithm which is deployed as a web service.
+      Enter the URL and a valid JSON request and click ‘Send’. There’s an
+      example of help get started. For more information, read the DiSARM
+      <a href="https://docs.disarm.io/api-docs">docs</a>
+    </p>
+    <button
+      v-if="!example_box"
+      @click="change_example_box"
+      class="see_example__btn"
+    >
       See example
     </button>
     <button v-else-if="example_box" @click="change_example_box" class="error">
@@ -232,7 +241,7 @@ export default Vue.extend({
         const start = Date.now();
         const value = await generic_runner(
           this.url || '',
-          this.parsed_request(),
+          this.parsed_request()
         );
         const end = Date.now();
 
@@ -241,10 +250,10 @@ export default Vue.extend({
 
         this.$emit(
           'post_message',
-          `Results of running ${this.url} (${(end - start) / 1000} seconds)`,
+          `Results of running ${this.url} (${(end - start) / 1000} seconds)`
         );
         this.post_message(
-          `Results of running ${this.url} (${(end - start) / 1000} seconds)`,
+          `Results of running ${this.url} (${(end - start) / 1000} seconds)`
         );
         this.$emit('refresh_list');
       } catch (error) {
@@ -339,9 +348,9 @@ export default Vue.extend({
   border-color: #e0dada;
 }
 
-.see_example__btn{
-  background:white;
-  color:black;
+.see_example__btn {
+  background: white;
+  color: black;
   border: 1px solid;
   border-color: gray;
 }
