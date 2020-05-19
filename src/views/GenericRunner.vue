@@ -329,9 +329,9 @@ export default Vue.extend({
   color: inherit;
 }
 
-label.tabs {
+/* label.tabs {
   width: 50%;
-}
+} */
 
 .example_box {
   border: solid 0.2px;
