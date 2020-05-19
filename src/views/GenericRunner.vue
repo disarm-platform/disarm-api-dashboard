@@ -241,7 +241,7 @@ export default Vue.extend({
         const start = Date.now();
         const value = await generic_runner(
           this.url || '',
-          this.parsed_request()
+          this.parsed_request(),
         );
         const end = Date.now();
 
@@ -250,10 +250,10 @@ export default Vue.extend({
 
         this.$emit(
           'post_message',
-          `Results of running ${this.url} (${(end - start) / 1000} seconds)`
+          `Results of running ${this.url} (${(end - start) / 1000} seconds)`,
         );
         this.post_message(
-          `Results of running ${this.url} (${(end - start) / 1000} seconds)`
+          `Results of running ${this.url} (${(end - start) / 1000} seconds)`,
         );
         this.$emit('refresh_list');
       } catch (error) {
