@@ -2,7 +2,6 @@
   <div>
     <h1>Generic function runner</h1>
 
-    <button v-if="!example_box" @click="change_example_box" class="success">
     <button v-if="!example_box" @click="change_example_box" class="see_example__btn">
       See example
     </button>
@@ -164,7 +163,7 @@ export default Vue.extend({
       request_string: '{}' as string,
       show_string: true,
       url: null as null | string,
-      example_box: true,
+      example_box: false,
     };
   },
   methods: {
@@ -339,6 +338,7 @@ label.tabs {
   padding: 20px;
   border-color: #e0dada;
 }
+
 .see_example__btn{
   background:white;
   color:black;
