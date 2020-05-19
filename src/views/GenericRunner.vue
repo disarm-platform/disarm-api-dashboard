@@ -3,6 +3,7 @@
     <h1>Generic function runner</h1>
 
     <button v-if="!example_box" @click="change_example_box" class="success">
+    <button v-if="!example_box" @click="change_example_box" class="see_example__btn">
       See example
     </button>
     <button v-else-if="example_box" @click="change_example_box" class="error">
@@ -337,5 +338,11 @@ label.tabs {
   border: solid 0.2px;
   padding: 20px;
   border-color: #e0dada;
+}
+.see_example__btn{
+  background:white;
+  color:black;
+  border: 1px solid;
+  border-color: gray;
 }
 </style>
