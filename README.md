@@ -17,7 +17,7 @@ Not sure whether the files below actually get picked up by either the now dev se
 Stick in `.env.build` file
 - `VUE_APP_API_URL`: optional, defaults to `/api` (i.e. same host as UI) - beware of CORS issues blocking this
 - `VUE_APP_OPENFAAS_URL`: optional, defaults to https://faas.srv.disarm.io
-- `VUE_APP_CORS_PROXY: optional, defaults to https://cors-anywhere.srv.disarm.io
+- `VUE_APP_CORS_PROXY`: optional, defaults to https://cors-anywhere.srv.disarm.io
 
 ### For API
 Stick in a `.env`
