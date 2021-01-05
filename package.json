@@ -16,7 +16,7 @@
     "@types/flat": "0.0.28",
     "@types/lodash": "^4.14.150",
     "@types/yaml": "^1.9.7",
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "direct-vuex": "^0.10.4",
     "downloadjs": "^1.4.7",
     "express": "^4.17.1",
