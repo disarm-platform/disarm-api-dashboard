@@ -21,7 +21,7 @@
     "downloadjs": "^1.4.7",
     "express": "^4.17.1",
     "flat": "^5.0.0",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.21",
     "picnic": "^6.5.2",
     "v-datatable-light": "^0.8.1",
     "vue": "^2.6.10",
